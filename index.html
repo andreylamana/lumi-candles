@@ -141,15 +141,16 @@ img{max-width:100%;display:block}
 
 /* ─── HERO ──────────────────────────────────────────────── */
 #hero{display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;background:var(--off-white);padding:100px 40px}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 60% 50%,rgba(201,169,110,0.08) 0%,transparent 70%)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(201,169,110,0.09) 0%,transparent 65%)}
 .hero-content{position:relative;max-width:700px}
-.hero-eyebrow{font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+.hero-eyebrow{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:12px}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:32px;height:1px;background:var(--gold);opacity:0.5}
 .hero-title{font-size:clamp(48px,7vw,88px);font-weight:300;line-height:1;letter-spacing:-0.02em;margin-bottom:24px}
 .hero-title em{font-style:italic;color:var(--gold)}
 .hero-sub{font-size:17px;color:var(--gray);max-width:480px;margin:0 auto 40px;line-height:1.7}
 .hero-cta{display:inline-flex;gap:16px;flex-wrap:wrap;justify-content:center}
-.hero-candle{margin:0 auto 40px;animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.hero-candle{margin:0 auto 44px;filter:drop-shadow(0 10px 28px rgba(201,169,110,0.28));animation:float 3.5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 
 /* ─── HOW IT WORKS ──────────────────────────────────────── */
 #how{background:white;text-align:center}
@@ -531,13 +532,74 @@ tr:hover td{background:rgba(201,169,110,0.03)}
   .pedido-detalhes{grid-template-columns:1fr}
   .cliente-login-box{padding:32px 24px}
 }
-@keyframes flicker{0%,100%{transform:scaleX(1) scaleY(1)}25%{transform:scaleX(0.9) scaleY(1.1)}50%{transform:scaleX(1.1) scaleY(0.9)}75%{transform:scaleX(0.95) scaleY(1.05)}}
-.flame{animation:flicker 1.5s ease-in-out infinite;transform-origin:bottom center}
+/* ─── FLAME ANIMATION ───────────────────────────────────── */
+@keyframes flicker {
+  0%,100%{ transform:scaleX(1)   scaleY(1);   opacity:.92 }
+  20%     { transform:scaleX(.86) scaleY(1.10); opacity:.87 }
+  40%     { transform:scaleX(1.08) scaleY(.92); opacity:.95 }
+  60%     { transform:scaleX(.90) scaleY(1.08); opacity:.84 }
+  80%     { transform:scaleX(1.05) scaleY(.96); opacity:.90 }
+}
+@keyframes flicker-inner {
+  0%,100%{ transform:scaleX(1)   scaleY(1);   opacity:.85 }
+  30%     { transform:scaleX(.82) scaleY(1.14); opacity:.70 }
+  65%     { transform:scaleX(1.10) scaleY(.90); opacity:.90 }
+}
+/* Chama: o <g> carrega a animação com transform-origin no centro-base da chama */
+.flame-wrap {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;   /* centro horizontal, base inferior */
+  animation: flicker 1.9s ease-in-out infinite;
+}
+.flame-wrap-inner {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flicker-inner 1.4s ease-in-out infinite;
+}
+/* legado — mantido para compatibilidade mas corrigido */
+.flame-outer { transform-box:fill-box; transform-origin:50% 100%; animation:flicker 1.9s ease-in-out infinite; }
+.flame-inner { transform-box:fill-box; transform-origin:50% 100%; animation:flicker-inner 1.4s ease-in-out infinite; }
+.flame       { transform-box:fill-box; transform-origin:50% 100%; animation:flicker 1.9s ease-in-out infinite; }
 
 /* ─── ALERT BANNER ──────────────────────────────────────── */
 .alert-box{background:#FEF3C7;border:1px solid #F59E0B;border-radius:4px;padding:14px 18px;margin-bottom:20px;font-size:14px;display:flex;align-items:center;gap:10px}
 .alert-box.red{background:#FEE2E2;border-color:var(--red);color:var(--red)}
 .alert-box.green{background:#D1FAE5;border-color:var(--green);color:#065F46}
+
+/* ─── MELHORIAS VISUAIS GERAIS ──────────────────────────── */
+/* Scroll suave */
+.section{scroll-margin-top:64px;opacity:0;transform:translateY(20px);transition:opacity 0.65s ease,transform 0.65s ease}
+.section.visible{opacity:1;transform:translateY(0)}
+/* Hero sempre visível */
+#hero{opacity:1;transform:none}
+
+/* Header sombra ao rolar */
+#shop-header.scrolled{box-shadow:0 2px 24px rgba(0,0,0,0.07)}
+
+/* Botões com micro-lift */
+.btn{transition:all 0.22s cubic-bezier(0.4,0,0.2,1)}
+.btn-primary:hover{background:var(--gold);color:var(--black);transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,169,110,0.3)}
+.btn-gold:hover{background:var(--gold-dark);color:var(--off-white);transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,169,110,0.35)}
+.btn-outline:hover{background:var(--black);color:var(--off-white);transform:translateY(-1px)}
+
+/* Option cards com hover float */
+.option-card{transition:all 0.2s ease;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.option-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,0.09)}
+.option-card.selected{transform:translateY(-2px);box-shadow:0 4px 14px rgba(201,169,110,0.22)}
+
+/* Swatches */
+.swatch{box-shadow:0 2px 6px rgba(0,0,0,0.14);transition:transform 0.18s ease,box-shadow 0.18s ease}
+.swatch:hover{transform:scale(1.12)}
+.swatch.selected{transform:scale(1.18);box-shadow:0 3px 12px rgba(201,169,110,0.45)}
+
+/* Channel cards */
+.channel-card{transition:all 0.22s ease}
+.channel-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.15)}
+
+/* Steps linha decorativa */
+.steps-grid{position:relative}
+.steps-grid::before{content:'';position:absolute;top:28px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,169,110,0.25),transparent);pointer-events:none}
+@media(max-width:600px){.steps-grid::before{display:none}}
 </style>
 </head>
 <body>
@@ -617,16 +679,40 @@ tr:hover td{background:rgba(201,169,110,0.03)}
       <span class="hero-eyebrow">Aromas que contam histórias</span>
       <!-- Animated candle SVG -->
       <div class="hero-candle">
-        <svg width="80" height="120" viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
-          <g class="flame" transform="translate(40,18)">
-            <ellipse cx="0" cy="0" rx="6" ry="10" fill="#FFD700" opacity="0.9"/>
-            <ellipse cx="0" cy="2" rx="3" ry="6" fill="#FFF" opacity="0.7"/>
+        <svg width="80" height="130" viewBox="0 0 80 130" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="candleGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#B8905A"/>
+              <stop offset="40%" stop-color="#C9A96E"/>
+              <stop offset="100%" stop-color="#A07840"/>
+            </linearGradient>
+            <!-- Filtro de brilho da chama -->
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Brilho ambiente da chama (não anima) -->
+          <ellipse cx="40" cy="22" rx="14" ry="18" fill="#FFD700" opacity="0.06"/>
+          <!-- Chama externa: <g> centralizado em cx=40, base em cy=30 -->
+          <g style="transform-box:fill-box;transform-origin:50% 100%;animation:flicker 1.9s ease-in-out infinite">
+            <ellipse cx="40" cy="18" rx="6" ry="12" fill="#FFD700" opacity="0.92" filter="url(#glow)"/>
           </g>
-          <line x1="40" y1="28" x2="40" y2="38" stroke="#8B7355" stroke-width="1.5"/>
-          <rect x="18" y="38" width="44" height="62" rx="8" fill="#C9A96E"/>
-          <rect x="18" y="38" width="44" height="14" rx="8" fill="#E8D5B0"/>
-          <rect x="22" y="65" width="36" height="2" rx="1" fill="rgba(255,255,255,0.3)"/>
-          <rect x="22" y="72" width="26" height="2" rx="1" fill="rgba(255,255,255,0.2)"/>
+          <!-- Chama interna -->
+          <g style="transform-box:fill-box;transform-origin:50% 100%;animation:flicker-inner 1.4s ease-in-out infinite">
+            <ellipse cx="40" cy="20" rx="3" ry="7" fill="#FFFDE0" opacity="0.90"/>
+          </g>
+          <!-- Pavio -->
+          <line x1="40" y1="28" x2="40" y2="40" stroke="#5C3D1E" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Corpo da vela -->
+          <rect x="18" y="40" width="44" height="64" rx="8" fill="url(#candleGrad)"/>
+          <!-- Topo -->
+          <rect x="18" y="40" width="44" height="16" rx="8" fill="#E8D5B0"/>
+          <!-- Detalhes -->
+          <rect x="23" y="68" width="34" height="1.5" rx="1" fill="rgba(255,255,255,0.35)"/>
+          <rect x="23" y="76" width="24" height="1.5" rx="1" fill="rgba(255,255,255,0.22)"/>
+          <!-- Reflexo -->
+          <rect x="52" y="44" width="4" height="52" rx="2" fill="rgba(255,255,255,0.12)"/>
         </svg>
       </div>
       <h1 class="hero-title">Velas feitas<br>para <em>você</em></h1>
@@ -791,15 +877,27 @@ tr:hover td{background:rgba(201,169,110,0.03)}
         <div class="preview-box">
           <h3>Prévia da sua vela</h3>
           <div class="preview-candle-wrap">
-            <svg id="preview-svg" width="120" height="180" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg">
-              <g class="flame" transform="translate(60,22)">
-                <ellipse cx="0" cy="0" rx="7" ry="12" fill="#FFD700" opacity="0.9"/>
-                <ellipse cx="0" cy="2" rx="3.5" ry="7" fill="#FFF" opacity="0.7"/>
+            <svg id="preview-svg" width="120" height="190" viewBox="0 0 120 190" xmlns="http://www.w3.org/2000/svg">
+              <!-- Brilho ambiente -->
+              <ellipse cx="60" cy="25" rx="16" ry="20" fill="#FFD700" opacity="0.06"/>
+              <!-- Chama externa -->
+              <g style="transform-box:fill-box;transform-origin:50% 100%;animation:flicker 1.9s ease-in-out infinite">
+                <ellipse cx="60" cy="20" rx="7" ry="13" fill="#FFD700" opacity="0.92"/>
               </g>
-              <line x1="60" y1="34" x2="60" y2="48" stroke="#8B7355" stroke-width="2"/>
-              <rect id="prev-body" x="24" y="48" width="72" height="100" rx="12" fill="#C9A96E"/>
-              <rect id="prev-top" x="24" y="48" width="72" height="20" rx="12" fill="#E8D5B0"/>
-              <text id="prev-msg" x="60" y="130" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="Cormorant Garamond,serif" font-style="italic"></text>
+              <!-- Chama interna -->
+              <g style="transform-box:fill-box;transform-origin:50% 100%;animation:flicker-inner 1.4s ease-in-out infinite">
+                <ellipse cx="60" cy="23" rx="3.5" ry="8" fill="#FFFDE0" opacity="0.90"/>
+              </g>
+              <!-- Pavio -->
+              <line x1="60" y1="34" x2="60" y2="48" stroke="#5C3D1E" stroke-width="2" stroke-linecap="round"/>
+              <!-- Corpo -->
+              <rect id="prev-body" x="24" y="48" width="72" height="110" rx="12" fill="#C9A96E"/>
+              <rect id="prev-top" x="24" y="48" width="72" height="22" rx="12" fill="#E8D5B0"/>
+              <!-- Decoração -->
+              <rect x="32" y="90" width="56" height="1.5" rx="1" fill="rgba(255,255,255,0.3)"/>
+              <rect x="32" y="100" width="40" height="1.5" rx="1" fill="rgba(255,255,255,0.2)"/>
+              <rect x="88" y="54" width="4" height="95" rx="2" fill="rgba(255,255,255,0.1)"/>
+              <text id="prev-msg" x="60" y="138" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="Cormorant Garamond,serif" font-style="italic"></text>
             </svg>
           </div>
           <div class="preview-details" id="preview-details">
@@ -848,24 +946,47 @@ tr:hover td{background:rgba(201,169,110,0.03)}
       </div>
       <div style="text-align:center">
         <svg width="280" height="340" viewBox="0 0 280 340" xmlns="http://www.w3.org/2000/svg">
-          <rect x="60" y="80" width="160" height="220" rx="20" fill="#C9A96E" opacity="0.15"/>
-          <rect x="70" y="90" width="140" height="200" rx="16" fill="#C9A96E" opacity="0.3"/>
-          <rect x="80" y="100" width="120" height="180" rx="12" fill="#C9A96E"/>
+          <!-- Sombras de profundidade -->
+          <rect x="60" y="80" width="160" height="220" rx="20" fill="#C9A96E" opacity="0.12"/>
+          <rect x="70" y="90" width="140" height="200" rx="16" fill="#C9A96E" opacity="0.25"/>
+          <!-- Corpo principal -->
+          <rect x="80" y="100" width="120" height="180" rx="12" fill="url(#aboutCandleGrad)"/>
           <rect x="80" y="100" width="120" height="32" rx="12" fill="#E8D5B0"/>
-          <line x1="140" y1="88" x2="140" y2="100" stroke="#8B7355" stroke-width="2"/>
-          <g class="flame" transform="translate(140,78)">
-            <ellipse cx="0" cy="0" rx="8" ry="14" fill="#FFD700" opacity="0.9"/>
-            <ellipse cx="0" cy="2" rx="4" ry="8" fill="#FFF" opacity="0.7"/>
+          <!-- Pavio -->
+          <line x1="140" y1="88" x2="140" y2="100" stroke="#5C3D1E" stroke-width="2" stroke-linecap="round"/>
+          <!-- Chama — <g> com transform-origin no centro-base de cada elipse -->
+          <ellipse cx="140" cy="76" rx="16" ry="22" fill="#FFD700" opacity="0.06"/>
+          <g style="transform-box:fill-box;transform-origin:50% 100%;animation:flicker 1.9s ease-in-out infinite">
+            <ellipse cx="140" cy="74" rx="9" ry="15" fill="#FFD700" opacity="0.92"/>
           </g>
+          <g style="transform-box:fill-box;transform-origin:50% 100%;animation:flicker-inner 1.4s ease-in-out infinite">
+            <ellipse cx="140" cy="77" rx="4.5" ry="9" fill="#FFFDE0" opacity="0.90"/>
+          </g>
+          <!-- Detalhes corpo -->
           <rect x="92" y="170" width="96" height="2" rx="1" fill="rgba(255,255,255,0.4)"/>
           <rect x="92" y="182" width="70" height="2" rx="1" fill="rgba(255,255,255,0.3)"/>
-          <rect x="92" y="194" width="82" height="2" rx="1" fill="rgba(255,255,255,0.25)"/>
-          <text x="140" y="222" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="11" font-family="Cormorant Garamond,serif" font-style="italic">com amor</text>
-          <!-- ribbon -->
-          <path d="M80 132 Q140 148 200 132" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none"/>
-          <!-- small candles -->
-          <rect x="20" y="200" width="32" height="60" rx="6" fill="#B89060" opacity="0.6"/>
-          <rect x="228" y="210" width="28" height="50" rx="5" fill="#D4B07A" opacity="0.5"/>
+          <rect x="92" y="194" width="82" height="2" rx="1" fill="rgba(255,255,255,0.2)"/>
+          <text x="140" y="224" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="11" font-family="Cormorant Garamond,serif" font-style="italic">com amor</text>
+          <!-- Fita decorativa -->
+          <path d="M80 132 Q140 148 200 132" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/>
+          <!-- Reflexo lateral -->
+          <rect x="185" y="108" width="6" height="160" rx="3" fill="rgba(255,255,255,0.1)"/>
+          <!-- Velas laterais -->
+          <rect x="18" y="204" width="32" height="56" rx="6" fill="#B89060" opacity="0.55"/>
+          <g style="transform-box:fill-box;transform-origin:50% 100%;animation:flicker 2.1s ease-in-out infinite">
+            <ellipse cx="34" cy="198" rx="4" ry="7" fill="#FFD700" opacity="0.7"/>
+          </g>
+          <rect x="230" y="214" width="28" height="46" rx="5" fill="#D4B07A" opacity="0.5"/>
+          <g style="transform-box:fill-box;transform-origin:50% 100%;animation:flicker 1.7s ease-in-out infinite 0.3s">
+            <ellipse cx="244" cy="208" rx="3.5" ry="6" fill="#FFD700" opacity="0.65"/>
+          </g>
+          <defs>
+            <linearGradient id="aboutCandleGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#B8905A"/>
+              <stop offset="45%" stop-color="#C9A96E"/>
+              <stop offset="100%" stop-color="#9A7040"/>
+            </linearGradient>
+          </defs>
         </svg>
       </div>
     </div>
@@ -3361,9 +3482,25 @@ function copiarCupom(code, el) {
   }).catch(() => toast('Código: ' + code, 'success'));
 }
 
+// ─── SCROLL REVEAL ─────────────────────────────────────────
+function initScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.section').forEach(s => observer.observe(s));
+}
+
+// ─── HEADER SCROLL ─────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const h = document.getElementById('shop-header');
+  if (h) h.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
 
 document.fonts && document.fonts.ready.then(() => {
   if (document.getElementById('ps-0')) updatePersPreview();
+  initScrollReveal();
 });
 </script>
 </body>

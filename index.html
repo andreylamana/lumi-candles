@@ -156,7 +156,7 @@ img{max-width:100%;display:block}
 #how{background:white;text-align:center}
 .section-title{font-size:clamp(36px,4vw,52px);margin-bottom:12px}
 .section-sub{color:var(--gray);margin-bottom:60px;font-size:16px}
-.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;max-width:900px;margin:0 auto}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;max-width:960px;margin:0 auto}
 .step{text-align:center}
 .step-icon{width:64px;height:64px;margin:0 auto 20px;background:var(--off-white);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold)}
 .step-num{font-family:var(--font-display);font-size:40px;color:var(--gold-light);margin-bottom:8px;line-height:1}
@@ -599,7 +599,8 @@ tr:hover td{background:rgba(201,169,110,0.03)}
 /* Steps linha decorativa */
 .steps-grid{position:relative}
 .steps-grid::before{content:'';position:absolute;top:28px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,169,110,0.25),transparent);pointer-events:none}
-@media(max-width:600px){.steps-grid::before{display:none}}
+@media(max-width:768px){.steps-grid{grid-template-columns:repeat(2,1fr)}.steps-grid::before{display:none}}
+@media(max-width:480px){.steps-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -1075,7 +1076,7 @@ tr:hover td{background:rgba(201,169,110,0.03)}
   <div class="cliente-login-box">
     <a onclick="showShop()" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--gray);cursor:pointer;margin-bottom:28px">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      Voltar para a loja
+      Ir para a loja
     </a>
     <div style="font-family:var(--font-display);font-size:30px;margin-bottom:8px;letter-spacing:0.08em">lumí<span style="color:var(--gold)">.</span></div>
     <h2 style="font-family:var(--font-display);font-weight:400;font-size:26px;margin-bottom:6px">Minha Conta</h2>
@@ -3402,20 +3403,52 @@ function rastrearDireto(numPedido) {
 }
 
 // ─── CUPONS ───────────────────────────────────────────────
-function renderCupons() {
+async function renderCupons() {
   const el = document.getElementById('cupons-list');
   if (!el) return;
   const pontos = clienteAtual?.pontos || 0;
   const nivel = getNivel(pontos);
   const totalPed = clientePedidos.length;
+  const emailCliente = clienteAtual?.['e-mail'] || '';
+
+  // ── Busca cupons configurados no Sheets ──────────────────
+  let cuponsSheets = [];
+  try {
+    const res = await apiCall('getCuponsConfig', {});
+    cuponsSheets = res.cupons || [];
+  } catch(e) {}
+
+  // ── Filtra cupons compatíveis com nível do cliente ────────
+  const niveisPrecedencia = ['Bronze','Prata','Ouro','Diamante'];
+  const nivelIdx = niveisPrecedencia.indexOf(nivel.nome);
+
   const cupons = [];
 
-  if (totalPed >= 1) cupons.push({
-    desconto: nivel.desconto + '%', tipo: 'Desconto ' + nivel.nome,
-    code: 'LUMI' + nivel.nome.toUpperCase(),
-    desc: `${nivel.desconto}% off em qualquer vela — nível ${nivel.nome}`,
-    validade: 'Válido por 30 dias', novo: totalPed === 1
+  // Cupons do Sheets: visíveis se nivel_minimo do cupom <= nivel atual
+  cuponsSheets.forEach(c => {
+    const minIdx = niveisPrecedencia.indexOf(c.nivel_minimo || 'Bronze');
+    if (minIdx <= nivelIdx && c.ativo !== 'Não' && c.ativo !== 'N') {
+      cupons.push({
+        desconto: c.desconto,
+        tipo: c.tipo || 'Desconto',
+        code: c.codigo,
+        desc: c.descricao || `${c.desconto} de desconto — ${c.campanha || nivel.nome}`,
+        validade: c.validade || 'Válido por 30 dias',
+        novo: c.novo === 'Sim' || c.novo === 'S',
+        origem: 'sheets'
+      });
+    }
   });
+
+  // Cupom de nível automático (se não veio do Sheets)
+  if (totalPed >= 1 && !cupons.find(c => c.code === 'LUMI'+nivel.nome.toUpperCase())) {
+    cupons.push({
+      desconto: nivel.desconto + '%', tipo: 'Desconto ' + nivel.nome,
+      code: 'LUMI' + nivel.nome.toUpperCase(),
+      desc: `${nivel.desconto}% off em qualquer vela — nível ${nivel.nome}`,
+      validade: 'Válido por 30 dias', novo: totalPed === 1
+    });
+  }
 
   if (nivel.frete) cupons.push({
     desconto: '🚚', tipo: 'Frete Grátis',
@@ -3450,7 +3483,8 @@ function renderCupons() {
     return;
   }
 
-  el.innerHTML = `<div class="cupons-grid">${cupons.map(c => `
+  el.innerHTML = `
+    <div class="cupons-grid">${cupons.map(c => `
     <div class="cupom-card">
       ${c.novo ? '<div class="cupom-badge-novo">Novo!</div>' : ''}
       <div class="cupom-header">
@@ -3470,7 +3504,81 @@ function renderCupons() {
           ${c.validade}
         </div>
       </div>
-    </div>`).join('')}</div>`;
+    </div>`).join('')}
+    </div>
+
+    <!-- ── Indicação de amigo ─────────────────────────── -->
+    <div style="background:white;border-radius:12px;padding:28px;margin-top:24px;border:1px solid var(--light-gray)">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+        <div style="width:48px;height:48px;background:rgba(201,169,110,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📲</div>
+        <div>
+          <div style="font-weight:500;font-size:15px;margin-bottom:2px">Indicar um amigo</div>
+          <div style="font-size:13px;color:var(--gray)">Se seu amigo comprar, você ganha <strong style="color:var(--gold)">+100 pontos</strong> automaticamente</div>
+        </div>
+      </div>
+      <div id="indicacao-resultado" style="display:none"></div>
+      <div id="indicacao-form">
+        <div class="field-row" style="margin-bottom:12px">
+          <div class="field" style="margin-bottom:0">
+            <label>Nome do amigo</label>
+            <input id="ind-nome" placeholder="Nome completo" style="width:100%;padding:10px 14px;border:1px solid var(--light-gray);border-radius:4px;font-size:14px;outline:none" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--light-gray)'">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Telefone / WhatsApp</label>
+            <input id="ind-tel" placeholder="(00) 00000-0000" style="width:100%;padding:10px 14px;border:1px solid var(--light-gray);border-radius:4px;font-size:14px;outline:none" oninput="maskPhone(this)" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--light-gray)'">
+          </div>
+        </div>
+        <button class="btn btn-gold w-full" style="justify-content:center" onclick="enviarIndicacao()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 .99h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.78a16 16 0 006.13 6.13l1.08-1.08a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          Enviar indicação
+        </button>
+      </div>
+    </div>`;
+}
+
+async function enviarIndicacao() {
+  const nome = document.getElementById('ind-nome')?.value?.trim();
+  const tel  = document.getElementById('ind-tel')?.value?.trim();
+  if (!nome) { toast('Informe o nome do amigo', 'error'); return; }
+  if (!tel || tel.replace(/\D/g,'').length < 10) { toast('Informe um telefone válido', 'error'); return; }
+
+  const btn = document.querySelector('#indicacao-form .btn-gold');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;margin:0;border-width:2px"></div>&nbsp;Enviando...'; }
+
+  const emailOrigem = clienteAtual?.['e-mail'] || '';
+  const nomeOrigem  = clienteAtual?.nome || emailOrigem;
+
+  const res = await apiCall('registrarIndicacao', {
+    emailOrigem,
+    nomeOrigem,
+    nomeAmigo: nome,
+    telefoneAmigo: tel
+  });
+
+  const resultEl = document.getElementById('indicacao-resultado');
+  const formEl   = document.getElementById('indicacao-form');
+
+  if (res.jaComprou) {
+    // Amigo já é cliente → credita 100 pontos
+    resultEl.innerHTML = `
+      <div class="alert-box green" style="margin-bottom:16px">
+        🎉 <strong>${nome}</strong> já é cliente Lumí! Você ganhou <strong>+100 pontos</strong> de bônus.
+      </div>`;
+    resultEl.style.display = 'block';
+    if (formEl) formEl.style.display = 'none';
+    toast('+100 pontos creditados!', 'success');
+  } else if (res.success) {
+    resultEl.innerHTML = `
+      <div class="alert-box green" style="margin-bottom:16px">
+        ✓ Indicação de <strong>${nome}</strong> registrada! Quando seu amigo fizer o primeiro pedido, você recebe automaticamente <strong>+100 pontos</strong>.
+      </div>`;
+    resultEl.style.display = 'block';
+    if (formEl) formEl.style.display = 'none';
+    toast('Indicação registrada!', 'success');
+  } else {
+    toast('Erro: ' + (res.error || 'tente novamente'), 'error');
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Enviar indicação'; }
+  }
 }
 
 function copiarCupom(code, el) {

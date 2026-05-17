@@ -409,13 +409,13 @@ tr:hover td{background:rgba(201,169,110,0.03)}
 ══════════════════════════════════════════════════════════ */
 
 /* Login cliente */
-#cliente-app{position:fixed;inset:0;background:var(--off-white);z-index:800;display:flex;align-items:center;justify-content:center;padding:40px 20px;overflow-y:auto}
-#cliente-app.hidden{display:none!important}
+#cliente-app{position:fixed;inset:0;background:var(--off-white);z-index:800;display:flex;align-items:center;justify-content:center;padding:40px 20px;overflow-y:auto;transition:opacity 0.2s ease}
+#cliente-app.hidden{display:none!important;pointer-events:none}
 .cliente-login-box{background:white;border-radius:12px;padding:48px 40px;width:440px;max-width:100%;box-shadow:0 8px 48px rgba(0,0,0,0.12)}
 
 /* Portal do cliente */
-#portal-app{position:fixed;inset:0;z-index:800;background:#F4F2EE;overflow-y:auto}
-#portal-app.hidden{display:none!important}
+#portal-app{position:fixed;inset:0;z-index:800;background:#F4F2EE;overflow-y:auto;transition:opacity 0.2s ease}
+#portal-app.hidden{display:none!important;pointer-events:none}
 .portal-header{background:var(--black);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .portal-logo{font-family:var(--font-display);font-size:22px;color:var(--off-white);letter-spacing:0.1em}
 .portal-logo span{color:var(--gold)}
@@ -1442,15 +1442,19 @@ function navigate(hash) {
 
 // ─── APP SWITCHER ───────────────────────────────────────────
 function showShop() {
-  document.getElementById('shop-app').classList.remove('hidden');
-  document.getElementById('admin-app').classList.add('hidden');
-  document.getElementById('login-app').classList.add('hidden');
+  // Fecha TUDO antes de abrir a loja — nenhum overlay sobreposto
+  ['admin-app','login-app','cliente-app','portal-app'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
   document.getElementById('checkout').classList.add('hidden');
+  document.getElementById('shop-app').classList.remove('hidden');
   // Restaura seções da loja caso estivessem ocultas
   ['hero','how','personalizar','sobre','contato'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = '';
   });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function showLogin() {
   document.getElementById('login-app').classList.remove('hidden');
@@ -2994,12 +2998,7 @@ function doClienteLogout() {
   clienteAtual = null;
   clientePedidos = [];
   sessionStorage.removeItem('lumi_cliente');
-  _hideAllApps();
-  document.getElementById('shop-app').classList.remove('hidden');
-  ['hero','how','personalizar','sobre','contato'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = '';
-  });
+  showShop(); // showShop já fecha todos os overlays e restaura as seções
   // Restaura botão header
   const btn = document.getElementById('btn-minha-conta');
   if (btn) btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg> Minha Conta`;

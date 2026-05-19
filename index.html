@@ -408,15 +408,598 @@ tr:hover td{background:rgba(201,169,110,0.03)}
    ÁREA DO CLIENTE
 ══════════════════════════════════════════════════════════ */
 
-/* Login cliente */
-#cliente-app{position:fixed;inset:0;background:var(--off-white);z-index:800;display:flex;align-items:center;justify-content:center;padding:40px 20px;overflow-y:auto;transition:opacity 0.2s ease}
-#cliente-app.hidden{display:none!important;pointer-events:none}
-.cliente-login-box{background:white;border-radius:12px;padding:48px 40px;width:440px;max-width:100%;box-shadow:0 8px 48px rgba(0,0,0,0.12)}
+
+/* ═══════════════════════════════════════════════════════
+   PORTAL & LOGIN — REDESIGN PREMIUM
+═══════════════════════════════════════════════════════ */
+
+/* ── Keyframes ─────────────────────────────────────────── */
+@keyframes portalFadeUp   { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
+@keyframes portalFadeIn   { from { opacity:0 } to { opacity:1 } }
+@keyframes pulseGold      { 0%,100% { box-shadow:0 0 0 0 rgba(201,169,110,0.4) } 60% { box-shadow:0 0 0 10px rgba(201,169,110,0) } }
+@keyframes shimmer        { 0% { background-position: -200% center } 100% { background-position: 200% center } }
+@keyframes countUp        { from { opacity:0; transform:scale(0.7) } to { opacity:1; transform:scale(1) } }
+@keyframes slideInLeft    { from { opacity:0; transform:translateX(-16px) } to { opacity:1; transform:translateX(0) } }
+@keyframes timelinePulse  { 0%,100%{box-shadow:0 0 0 0 rgba(201,169,110,0.5)} 50%{box-shadow:0 0 0 8px rgba(201,169,110,0)} }
+
+/* ── Login Screen ─────────────────────────────────────── */
+#cliente-app {
+  position: fixed; inset: 0; z-index: 800;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; overflow-y: auto;
+  background: radial-gradient(ellipse at 30% 20%, #1a1610 0%, #0D0B08 60%, #080604 100%);
+  animation: portalFadeIn 0.4s ease;
+}
+#cliente-app.hidden { display:none!important; pointer-events:none }
+
+.login-screen {
+  width: 100%; max-width: 440px;
+  animation: portalFadeUp 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+
+.login-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,169,110,0.15);
+  border-radius: 20px;
+  padding: 52px 44px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative; overflow: hidden;
+}
+.login-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,169,110,0.4), transparent);
+}
+
+.login-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; color: rgba(255,255,255,0.35); cursor: pointer;
+  margin-bottom: 36px; letter-spacing: 0.05em; transition: color 0.2s;
+  background: none; border: none; padding: 0; font-family: var(--font-body);
+}
+.login-back:hover { color: rgba(201,169,110,0.8) }
+
+.login-brand {
+  font-family: var(--font-display);
+  font-size: 36px; letter-spacing: 0.1em;
+  color: var(--off-white); margin-bottom: 6px; line-height: 1;
+}
+.login-brand span { color: var(--gold) }
+
+.login-tagline {
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,255,255,0.25); margin-bottom: 40px;
+}
+
+.login-label {
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(255,255,255,0.4); margin-bottom: 10px; display: block;
+}
+
+.login-input {
+  width: 100%; padding: 16px 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: var(--off-white); font-size: 15px; font-family: var(--font-body);
+  outline: none; transition: all 0.25s;
+  box-sizing: border-box;
+}
+.login-input::placeholder { color: rgba(255,255,255,0.2) }
+.login-input:focus {
+  border-color: rgba(201,169,110,0.6);
+  background: rgba(201,169,110,0.06);
+  box-shadow: 0 0 0 3px rgba(201,169,110,0.1);
+}
+
+.login-btn {
+  width: 100%; padding: 16px;
+  background: linear-gradient(135deg, #C9A96E 0%, #A8823A 100%);
+  color: var(--black); border: none; border-radius: 10px;
+  font-size: 14px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer;
+  font-family: var(--font-body); margin-top: 12px;
+  transition: all 0.25s; position: relative; overflow: hidden;
+}
+.login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(201,169,110,0.4);
+}
+.login-btn:active { transform: translateY(0) }
+
+.login-divider {
+  display: flex; align-items: center; gap: 16px; margin: 28px 0;
+  color: rgba(255,255,255,0.15); font-size: 12px;
+}
+.login-divider::before, .login-divider::after {
+  content:''; flex:1; height:1px; background:rgba(255,255,255,0.08);
+}
+
+.login-cta-box {
+  text-align: center;
+}
+.login-cta-text { font-size:13px; color:rgba(255,255,255,0.3); margin-bottom:14px; line-height:1.6 }
+.login-cta-text strong { color:rgba(255,255,255,0.6); font-weight:500 }
+
+.login-cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px;
+  border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 8px; background: transparent;
+  color: rgba(201,169,110,0.7); font-size: 13px;
+  cursor: pointer; font-family: var(--font-body);
+  transition: all 0.25s;
+}
+.login-cta-btn:hover {
+  background: rgba(201,169,110,0.08);
+  border-color: rgba(201,169,110,0.5);
+  color: var(--gold);
+}
+
+.login-error-box {
+  background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.25);
+  border-radius: 8px; padding: 12px 16px;
+  color: #FCA5A5; font-size: 13px; margin-bottom: 16px;
+  display: none; animation: portalFadeUp 0.3s ease;
+}
+
+/* Decorative orbs on login bg */
+.login-orb {
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+  filter: blur(80px); opacity: 0.15;
+}
+.login-orb-1 { width:400px; height:400px; background:var(--gold); top:-100px; right:-100px }
+.login-orb-2 { width:300px; height:300px; background:#8B6914; bottom:-80px; left:-80px }
+
+/* ── Portal App Shell ─────────────────────────────────── */
+#portal-app {
+  position: fixed; inset: 0; z-index: 800;
+  background: #F7F4F0;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  animation: portalFadeIn 0.35s ease;
+}
+#portal-app.hidden { display:none!important; pointer-events:none }
+
+/* Top bar */
+.portal-topbar {
+  height: 60px; flex-shrink: 0;
+  background: var(--black);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; position: relative; z-index: 10;
+  border-bottom: 1px solid rgba(201,169,110,0.15);
+}
+.portal-topbar::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,169,110,0.3),transparent);
+}
+
+.portal-brand {
+  font-family: var(--font-display); font-size: 20px;
+  color: var(--off-white); letter-spacing: 0.12em;
+}
+.portal-brand span { color: var(--gold) }
+
+.portal-topbar-right { display:flex; align-items:center; gap:16px }
+
+.portal-user-chip {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 40px; padding: 5px 14px 5px 5px;
+  cursor: default;
+}
+.portal-avatar-sm {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #A8823A);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600; color: var(--black); flex-shrink:0;
+}
+.portal-user-name { font-size: 13px; color: rgba(249,246,241,0.8); font-weight:500 }
+.portal-user-level { font-size: 10px; color: var(--gold); letter-spacing:0.08em }
+
+.portal-logout-btn {
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:rgba(255,255,255,0.4); transition:all 0.2s;
+}
+.portal-logout-btn:hover { background:rgba(220,38,38,0.15); border-color:rgba(220,38,38,0.3); color:#FCA5A5 }
+
+/* Body layout: sidebar + content */
+.portal-body {
+  flex: 1; display: flex; overflow: hidden; min-height: 0;
+}
+
+/* Sidebar nav */
+.portal-sidebar {
+  width: 220px; flex-shrink: 0;
+  background: white;
+  border-right: 1px solid rgba(0,0,0,0.06);
+  display: flex; flex-direction: column;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.portal-sidebar-section {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(0,0,0,0.3); padding: 0 12px; margin-bottom: 8px; margin-top: 20px;
+}
+.portal-sidebar-section:first-child { margin-top: 0 }
+
+.portal-nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: 10px;
+  font-size: 14px; color: rgba(0,0,0,0.5);
+  cursor: pointer; transition: all 0.2s; position: relative;
+  border: 1px solid transparent; margin-bottom: 2px;
+  background: none;
+  width: 100%; text-align: left; font-family: var(--font-body);
+}
+.portal-nav-item:hover { background: rgba(0,0,0,0.04); color: var(--black) }
+.portal-nav-item.active {
+  background: rgba(201,169,110,0.1);
+  border-color: rgba(201,169,110,0.2);
+  color: var(--black); font-weight: 500;
+}
+.portal-nav-item.active svg { color: var(--gold) }
+.portal-nav-item svg { flex-shrink:0; transition: color 0.2s }
+
+.portal-nav-badge {
+  margin-left: auto; background: var(--gold);
+  color: var(--black); font-size: 10px; font-weight: 700;
+  padding: 1px 7px; border-radius: 10px;
+}
+
+/* Main scroll area */
+.portal-main {
+  flex: 1; overflow-y: auto; padding: 32px;
+  display: flex; flex-direction: column; gap: 24px;
+}
+
+.portal-section {
+  animation: portalFadeUp 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+
+/* ── Fidelidade card ──────────────────────────────────── */
+.fid-hero-card {
+  background: linear-gradient(135deg, #1A1208 0%, #2C1F0A 50%, #1A1208 100%);
+  border-radius: 20px; padding: 36px 40px;
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center;
+  border: 1px solid rgba(201,169,110,0.2);
+}
+.fid-hero-card::before {
+  content:''; position:absolute; width:500px; height:500px;
+  border-radius:50%; right:-150px; top:-200px;
+  background:radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%);
+  pointer-events:none;
+}
+.fid-hero-card::after {
+  content:''; position:absolute; width:300px; height:300px;
+  border-radius:50%; left:-80px; bottom:-150px;
+  background:radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.fid-eyebrow {
+  font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.fid-eyebrow::before { content:''; width:20px; height:1px; background:var(--gold); opacity:0.5 }
+
+.fid-greeting { font-family: var(--font-display); font-size: clamp(22px,2.5vw,32px); color: var(--off-white); margin-bottom: 4px }
+.fid-sub { font-size: 13px; color: rgba(249,246,241,0.4); margin-bottom: 24px }
+
+.fid-progress-wrap { margin-top: 4px }
+.fid-progress-labels { display:flex; justify-content:space-between; font-size: 11px; color:rgba(249,246,241,0.35); margin-bottom: 8px }
+.fid-progress-track {
+  height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: visible; position: relative;
+}
+.fid-progress-fill {
+  height: 100%; border-radius: 3px; position: relative;
+  background: linear-gradient(90deg, #8B6914 0%, #C9A96E 60%, #E8C87A 100%);
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+.fid-progress-fill::after {
+  content:''; position:absolute; right:-1px; top:-3px;
+  width:11px; height:11px; border-radius:50%;
+  background: var(--gold); border: 2px solid #1A1208;
+  box-shadow: 0 0 8px rgba(201,169,110,0.6);
+  animation: pulseGold 2s infinite;
+}
+
+.fid-pts-bubble {
+  text-align: center; position: relative; z-index: 1;
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.2);
+  border-radius: 16px; padding: 20px 28px;
+  min-width: 130px;
+}
+.fid-pts-num {
+  font-family: var(--font-display); font-size: 52px; line-height: 1;
+  background: linear-gradient(135deg, #C9A96E, #F0D090);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: countUp 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+.fid-pts-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(249,246,241,0.4); margin-top: 4px }
+
+/* Níveis grid */
+.niveis-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px }
+.nivel-card {
+  background: white; border-radius: 14px; padding: 20px 16px;
+  text-align: center; border: 1.5px solid rgba(0,0,0,0.06);
+  transition: all 0.25s; position: relative; overflow: hidden;
+}
+.nivel-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.08) }
+.nivel-card.atual {
+  border-color: var(--gold);
+  background: linear-gradient(160deg, rgba(201,169,110,0.06) 0%, white 100%);
+}
+.nivel-card.atual::before {
+  content:'Seu nível'; position:absolute; top:0; right:0;
+  background:var(--gold); color:var(--black);
+  font-size:9px; font-weight:700; letter-spacing:0.08em;
+  padding:3px 10px; border-bottom-left-radius:8px;
+}
+.nivel-card.bloqueado { opacity: 0.45; filter: grayscale(0.5) }
+.nivel-icon-wrap {
+  width:44px; height:44px; border-radius:12px; margin:0 auto 12px;
+  display:flex; align-items:center; justify-content:center; font-size:22px;
+}
+.nivel-name { font-weight:600; font-size:14px; margin-bottom:3px }
+.nivel-pts-req { font-size:11px; color:var(--gray) }
+.nivel-desc { font-size:11px; color:var(--gold); margin-top:6px; line-height:1.4 }
+
+/* Benefícios */
+.beneficios-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px }
+.beneficio-card {
+  background:white; border-radius:14px; padding:20px;
+  border:1.5px solid rgba(0,0,0,0.05); transition:all 0.2s;
+  display:flex; flex-direction:column; gap:10px;
+}
+.beneficio-card:hover { border-color:rgba(201,169,110,0.3); transform:translateY(-1px) }
+.beneficio-icon-wrap {
+  width:38px; height:38px; border-radius:10px;
+  background:rgba(201,169,110,0.1);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--gold);
+}
+.beneficio-title { font-size:13px; font-weight:600; color:var(--black) }
+.beneficio-desc { font-size:12px; color:var(--gray); line-height:1.5; flex:1 }
+
+/* Como ganhar pontos */
+.pontos-card {
+  background:white; border-radius:16px; padding:28px;
+  border:1.5px solid rgba(0,0,0,0.05);
+}
+.pontos-card-title {
+  font-family:var(--font-display); font-size:18px;
+  margin-bottom:20px; color:var(--black);
+  display:flex; align-items:center; gap:10px;
+}
+.pontos-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0; border-bottom:1px solid rgba(0,0,0,0.05);
+  animation: slideInLeft 0.4s ease both;
+}
+.pontos-row:last-child { border-bottom:none; padding-bottom:0 }
+.pontos-row-left { display:flex; align-items:center; gap:12px; font-size:14px; color:var(--black) }
+.pontos-row-icon {
+  width:36px; height:36px; border-radius:10px;
+  background:rgba(201,169,110,0.08);
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+  flex-shrink:0;
+}
+.pontos-row-pts {
+  font-family:var(--font-display); font-size:16px; color:var(--gold);
+  white-space:nowrap;
+}
+
+/* Extrato */
+.extrato-card {
+  background:white; border-radius:16px;
+  border:1.5px solid rgba(0,0,0,0.05); overflow:hidden;
+}
+.extrato-header {
+  padding:18px 24px; border-bottom:1px solid rgba(0,0,0,0.05);
+  display:flex; align-items:center; gap:8px;
+  font-family:var(--font-display); font-size:17px;
+}
+.extrato-empty {
+  padding:40px; text-align:center; color:var(--gray); font-size:13px;
+}
+.extrato-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 24px; border-bottom:1px solid rgba(0,0,0,0.04);
+  animation:slideInLeft 0.3s ease both;
+}
+.extrato-item:last-child { border-bottom:none }
+.extrato-item-left { display:flex; align-items:center; gap:12px }
+.extrato-item-dot {
+  width:8px; height:8px; border-radius:50%; flex-shrink:0;
+}
+.extrato-item-desc { font-size:13px; color:var(--black) }
+.extrato-item-date { font-size:11px; color:var(--gray); margin-top:2px }
+.extrato-item-pts { font-family:var(--font-display); font-size:15px }
+
+/* ── Rastreio ─────────────────────────────────────────── */
+.rastreio-card {
+  background:white; border-radius:16px; padding:28px;
+  border:1.5px solid rgba(0,0,0,0.05);
+}
+.rastreio-title {
+  font-family:var(--font-display); font-size:20px;
+  margin-bottom:6px;
+}
+.rastreio-sub { font-size:13px; color:var(--gray); margin-bottom:20px }
+.rastreio-row { display:flex; gap:12px }
+.rastreio-input-new {
+  flex:1; padding:13px 18px;
+  border:1.5px solid rgba(0,0,0,0.1); border-radius:10px;
+  font-size:14px; font-family:var(--font-body); outline:none;
+  transition:all 0.2s; color:var(--black); background:var(--off-white);
+}
+.rastreio-input-new:focus { border-color:var(--gold); background:white; box-shadow:0 0 0 3px rgba(201,169,110,0.1) }
+.rastreio-input-new::placeholder { color:rgba(0,0,0,0.3) }
+
+.rastreio-result-card {
+  background:white; border-radius:16px; padding:28px;
+  border:1.5px solid rgba(0,0,0,0.05);
+  animation:portalFadeUp 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.rastreio-result-header {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  flex-wrap:wrap; gap:16px; margin-bottom:28px; padding-bottom:20px;
+  border-bottom:1px solid rgba(0,0,0,0.06);
+}
+.rastreio-num-new { font-family:var(--font-display); font-size:28px; color:var(--gold) }
+.rastreio-meta { font-size:13px; color:var(--gray); margin-top:3px }
+
+/* Timeline redesign */
+.timeline-new { padding-left: 0; display:flex; flex-direction:column; gap:0 }
+.timeline-new-item {
+  display:flex; gap:16px; position:relative;
+  animation:slideInLeft 0.35s ease both;
+}
+.timeline-new-item:not(:last-child) .tl-line { flex:1; }
+.tl-left { display:flex; flex-direction:column; align-items:center; width:32px; flex-shrink:0 }
+.tl-dot {
+  width:32px; height:32px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  border:2px solid rgba(0,0,0,0.1); background:white; z-index:1;
+  transition:all 0.3s;
+}
+.tl-dot.done { background:var(--gold); border-color:var(--gold) }
+.tl-dot.active { background:white; border-color:var(--gold); animation:timelinePulse 2s infinite }
+.tl-dot svg { width:13px; height:13px }
+.tl-dot.done svg { color:var(--black) }
+.tl-dot.active svg { color:var(--gold) }
+.tl-line { width:2px; background:rgba(0,0,0,0.07); min-height:32px; margin:4px 0; border-radius:1px }
+.tl-line.done { background:var(--gold); opacity:0.5 }
+.tl-right { padding:4px 0 32px; flex:1; min-width:0 }
+.tl-title { font-size:14px; font-weight:500; color:var(--gray) }
+.tl-title.done { color:var(--black) }
+.tl-title.active { color:var(--gold); font-weight:600 }
+.tl-desc { font-size:12px; color:var(--gray); margin-top:3px }
+.tl-time { font-size:10px; color:rgba(0,0,0,0.3); letter-spacing:0.06em; text-transform:uppercase; margin-top:4px }
+.tl-time.done { color:var(--gray) }
+
+/* ── Pedidos ──────────────────────────────────────────── */
+.historico-card-new {
+  background:white; border-radius:14px; padding:20px 22px;
+  border:1.5px solid rgba(0,0,0,0.05);
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  cursor:pointer; transition:all 0.22s;
+  animation:portalFadeUp 0.4s ease both;
+}
+.historico-card-new:hover {
+  border-color:rgba(201,169,110,0.35);
+  box-shadow:0 4px 20px rgba(201,169,110,0.1);
+  transform:translateY(-1px);
+}
+.hist-candle-thumb {
+  width:44px; height:44px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.hist-info h4 { font-weight:600; font-size:14px; margin-bottom:3px }
+.hist-info p { font-size:12px; color:var(--gray) }
+.hist-right { text-align:right; flex-shrink:0 }
+.hist-valor { font-family:var(--font-display); font-size:19px; color:var(--black) }
+.hist-status { display:inline-flex; align-items:center; gap:5px; font-size:11px; margin-top:4px; padding:2px 10px; border-radius:20px; font-weight:500 }
+
+/* ── Cupons ───────────────────────────────────────────── */
+.cupons-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px }
+.cupom-card-new {
+  border-radius:16px; overflow:hidden; position:relative;
+  border:1.5px solid rgba(0,0,0,0.07);
+  transition:all 0.25s; animation:portalFadeUp 0.4s ease both;
+}
+.cupom-card-new:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,0.1) }
+.cupom-top {
+  background:linear-gradient(135deg, #1A1208 0%, #2C1F0A 100%);
+  padding:20px 22px; position:relative; overflow:hidden;
+}
+.cupom-top::before {
+  content:''; position:absolute; right:-30px; top:-30px;
+  width:100px; height:100px; border-radius:50%;
+  background:rgba(201,169,110,0.12);
+}
+.cupom-discount { font-family:var(--font-display); font-size:36px; color:var(--gold); line-height:1 }
+.cupom-type { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(249,246,241,0.4); margin-top:4px }
+.cupom-badge-new {
+  position:absolute; top:14px; right:14px; z-index:1;
+  background:var(--gold); color:var(--black);
+  font-size:9px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+  padding:3px 10px; border-radius:20px;
+}
+.cupom-bottom { background:white; padding:16px 22px }
+.cupom-code-new {
+  font-family:monospace; font-size:15px; font-weight:700; letter-spacing:0.18em;
+  color:var(--black); background:var(--off-white);
+  padding:10px 14px; border-radius:8px; margin-bottom:10px;
+  display:flex; justify-content:space-between; align-items:center;
+  cursor:pointer; transition:all 0.2s; border:1px solid rgba(0,0,0,0.06);
+}
+.cupom-code-new:hover { background:#EDE8DF; border-color:rgba(201,169,110,0.3) }
+.cupom-desc-new { font-size:13px; color:var(--gray); margin-bottom:8px; line-height:1.5 }
+.cupom-val-new { font-size:11px; color:rgba(0,0,0,0.35); display:flex; align-items:center; gap:4px }
+
+/* Indicação card inside cupons */
+.indica-card {
+  background:white; border-radius:16px; padding:28px;
+  border:1.5px solid rgba(201,169,110,0.2);
+  background:linear-gradient(160deg, rgba(201,169,110,0.04) 0%, white 100%);
+}
+.indica-title { font-size:15px; font-weight:600; margin-bottom:4px; display:flex; align-items:center; gap:10px }
+.indica-sub { font-size:13px; color:var(--gray); margin-bottom:20px; line-height:1.6 }
+
+/* Section headers in portal */
+.portal-section-title {
+  font-family:var(--font-display); font-size:20px; color:var(--black);
+  margin-bottom:16px; display:flex; align-items:center; gap:10px;
+}
+.portal-section-title::after { content:''; flex:1; height:1px; background:rgba(0,0,0,0.06) }
+
+/* Shimmer loading */
+.skeleton {
+  background:linear-gradient(90deg, #f0ece6 0%, #e8e2d8 50%, #f0ece6 100%);
+  background-size:200% 100%; border-radius:8px;
+  animation:shimmer 1.4s ease infinite;
+}
+
+@media(max-width:768px){
+  .portal-sidebar { display:none }
+  .portal-body { flex-direction:column }
+  .portal-main { padding:20px 16px }
+  .fid-hero-card { grid-template-columns:1fr; text-align:center }
+  .fid-pts-bubble { margin:0 auto; max-width:160px }
+  .niveis-grid { grid-template-columns:repeat(2,1fr) }
+  .rastreio-row { flex-direction:column }
+  .portal-mobile-nav {
+    display:flex!important; background:white; border-top:1px solid rgba(0,0,0,0.07);
+    overflow-x:auto; flex-shrink:0;
+  }
+  .portal-topbar { padding:0 16px }
+  .portal-user-chip .portal-user-level { display:none }
+}
+.portal-mobile-nav { display:none }
+.mobile-nav-item {
+  flex:1; min-width:60px; padding:10px 8px;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  font-size:10px; color:rgba(0,0,0,0.4); cursor:pointer; transition:all 0.2s;
+  border-top:2px solid transparent;
+}
+.mobile-nav-item.active { color:var(--gold); border-top-color:var(--gold) }
+.mobile-nav-item svg { width:18px; height:18px }
+
+
+.cliente-login-box{display:none}
 
 /* Portal do cliente */
-#portal-app{position:fixed;inset:0;z-index:800;background:#F4F2EE;overflow-y:auto;transition:opacity 0.2s ease}
-#portal-app.hidden{display:none!important;pointer-events:none}
-.portal-header{background:var(--black);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+/* [replaced] */
 .portal-logo{font-family:var(--font-display);font-size:22px;color:var(--off-white);letter-spacing:0.1em}
 .portal-logo span{color:var(--gold)}
 .portal-user-info{display:flex;align-items:center;gap:12px;color:rgba(249,246,241,0.7);font-size:14px}
@@ -522,16 +1105,6 @@ tr:hover td{background:rgba(201,169,110,0.03)}
 .cupom-validade{font-size:11px;color:var(--gray);display:flex;align-items:center;gap:4px}
 .cupom-badge-novo{position:absolute;top:10px;right:10px;background:var(--gold);color:var(--black);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:0.05em}
 
-@media(max-width:768px){
-  .portal-header{padding:0 20px}
-  .portal-nav{padding:0 16px}
-  .portal-content{padding:24px 16px}
-  .fidelidade-hero{grid-template-columns:1fr;text-align:center}
-  .pontos-big{text-align:center}
-  .rastreio-input-row{flex-direction:column}
-  .pedido-detalhes{grid-template-columns:1fr}
-  .cliente-login-box{padding:32px 24px}
-}
 /* ─── FLAME ANIMATION ───────────────────────────────────── */
 @keyframes flicker {
   0%,100%{ transform:scaleX(1)   scaleY(1);   opacity:.92 }
@@ -629,6 +1202,17 @@ tr:hover td{background:rgba(201,169,110,0.03)}
 .catalogo-empty{text-align:center;padding:80px 20px;color:var(--gray);grid-column:1/-1}
 .catalogo-empty svg{color:var(--light-gray);margin:0 auto 20px}
 @media(max-width:600px){.catalogo-grid{grid-template-columns:repeat(2,1fr);gap:16px}.vela-card-body{padding:14px 14px 16px}.vela-card-title{font-size:15px}}
+
+
+/* ─── OPÇÕES INDISPONÍVEIS NO PERSONALIZADOR ────────────────────────────── */
+.swatch.indisponivel{opacity:0.32;cursor:not-allowed;filter:grayscale(0.7)}
+.swatch.indisponivel::after{content:'✕';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;color:rgba(0,0,0,0.5);font-weight:700}
+.swatch.indisponivel:hover{transform:none!important;box-shadow:none!important}
+.option-card.indisponivel{opacity:0.35;cursor:not-allowed;background:repeating-linear-gradient(45deg,var(--off-white),var(--off-white) 5px,#ebe8e0 5px,#ebe8e0 10px)}
+.option-card.indisponivel .opt-name::after{content:' — Esgotado';color:var(--red);font-size:11px}
+.option-card.indisponivel:hover{transform:none!important;box-shadow:none!important;border-color:var(--light-gray)!important}
+.pers-config-loading{text-align:center;padding:40px;color:var(--gray);font-size:13px;display:flex;align-items:center;justify-content:center;gap:10px}
+.pers-config-aviso{background:#FEF3C7;border:1px solid #F59E0B;border-radius:6px;padding:10px 14px;font-size:12px;color:#92400E;margin-bottom:16px;display:none}
 
 </style>
 </head>
@@ -821,6 +1405,7 @@ tr:hover td{background:rgba(201,169,110,0.03)}
         <!-- Step 0: Cor -->
         <div class="pers-step active" id="ps-0">
           <h3 style="font-size:20px;margin-bottom:16px">Escolha a cor</h3>
+          <div id="pers-config-aviso" class="pers-config-aviso">⚠️ Algumas opções estão temporariamente indisponíveis por falta de insumos.</div>
           <div class="color-swatches" id="color-swatches"></div>
           <div class="step-nav">
             <span></span>
@@ -1139,45 +1724,56 @@ tr:hover td{background:rgba(201,169,110,0.03)}
      LOGIN DO CLIENTE
 ═══════════════════════════════════════════════════════ -->
 <div id="cliente-app" class="hidden">
-  <div class="cliente-login-box">
-    <a onclick="showShop()" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--gray);cursor:pointer;margin-bottom:28px">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      Ir para a loja
-    </a>
-    <div style="font-family:var(--font-display);font-size:30px;margin-bottom:8px;letter-spacing:0.08em">lumí<span style="color:var(--gold)">.</span></div>
-    <h2 style="font-family:var(--font-display);font-weight:400;font-size:26px;margin-bottom:6px">Minha Conta</h2>
-    <p style="color:var(--gray);font-size:14px;margin-bottom:28px;line-height:1.6">Digite o e-mail usado no seu pedido para acessar seu histórico, rastrear entregas e ver seus benefícios.</p>
-    <div id="cliente-login-error" style="display:none;background:#FEE2E2;color:#991B1B;padding:12px 14px;border-radius:6px;font-size:13px;margin-bottom:16px;border-left:3px solid #C0392B">
-      ⚠ E-mail não encontrado. Verifique se é o mesmo usado no pedido.
-    </div>
-    <div id="cliente-login-loading" style="display:none;text-align:center;padding:16px 0">
-      <div class="spinner" style="margin:0 auto"></div>
-      <p style="font-size:13px;color:var(--gray);margin-top:8px">Buscando sua conta...</p>
-    </div>
-    <div id="cliente-login-form">
-      <div class="field">
-        <label>Seu e-mail</label>
-        <input type="email" id="cliente-email-input" placeholder="exemplo@email.com"
-          style="width:100%;padding:14px 16px;border:1px solid var(--light-gray);border-radius:4px;font-size:15px;outline:none;transition:border-color 0.2s"
-          onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--light-gray)'"
-          onkeydown="if(event.key==='Enter')doClienteLogin()">
-      </div>
-      <button onclick="doClienteLogin()"
-        style="width:100%;padding:14px;background:var(--black);color:var(--off-white);border:none;border-radius:4px;font-size:15px;font-family:var(--font-body);cursor:pointer;transition:background 0.2s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px"
-        onmouseover="this.style.background='var(--gold)';this.style.color='var(--black)'"
-        onmouseout="this.style.background='var(--black)';this.style.color='var(--off-white)'">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
-        Acessar minha conta
+  <!-- Decorative background orbs -->
+  <div class="login-orb login-orb-1"></div>
+  <div class="login-orb login-orb-2"></div>
+
+  <div class="login-screen" style="position:relative;z-index:1">
+    <div class="login-card">
+      <!-- Back -->
+      <button class="login-back" onclick="showShop()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Ir para a loja
       </button>
-      <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--light-gray);text-align:center">
-        <p style="font-size:13px;color:var(--gray);line-height:1.7">
-          Ainda não tem conta?<br>
-          <strong style="color:var(--black)">Sua conta é criada automaticamente ao fazer o primeiro pedido!</strong>
-        </p>
-        <button onclick="showShop();navigate('personalizar')"
-          style="margin-top:12px;padding:10px 20px;border:1px solid var(--light-gray);border-radius:4px;background:white;font-size:13px;cursor:pointer;color:var(--black);font-family:var(--font-body)">
-          🕯 Criar minha vela
+
+      <!-- Brand -->
+      <div class="login-brand">lumí<span>.</span></div>
+      <div class="login-tagline">Área exclusiva do cliente</div>
+
+      <!-- Error -->
+      <div id="cliente-login-error" class="login-error-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        E-mail não encontrado. Verifique se é o mesmo usado no pedido.
+      </div>
+
+      <!-- Loading -->
+      <div id="cliente-login-loading" style="display:none;text-align:center;padding:20px 0">
+        <div class="spinner" style="margin:0 auto;border-color:rgba(201,169,110,0.2);border-top-color:var(--gold)"></div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:12px;letter-spacing:0.05em">Verificando sua conta...</p>
+      </div>
+
+      <!-- Form -->
+      <div id="cliente-login-form">
+        <label class="login-label">Seu e-mail</label>
+        <input type="email" id="cliente-email-input" class="login-input"
+          placeholder="exemplo@email.com"
+          onkeydown="if(event.key==='Enter')doClienteLogin()">
+        <button class="login-btn" onclick="doClienteLogin()" style="margin-top:16px">
+          Acessar minha conta
         </button>
+
+        <div class="login-divider">ou</div>
+
+        <div class="login-cta-box">
+          <p class="login-cta-text">
+            Ainda não tem conta?<br>
+            <strong>Criada automaticamente no primeiro pedido!</strong>
+          </p>
+          <button class="login-cta-btn" onclick="showShop();navigate('personalizar')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Criar minha vela
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -1187,151 +1783,186 @@ tr:hover td{background:rgba(201,169,110,0.03)}
      PORTAL DO CLIENTE
 ═══════════════════════════════════════════════════════ -->
 <div id="portal-app" class="hidden">
-  <!-- Header -->
-  <header class="portal-header">
-    <div class="portal-logo">lumí<span>.</span></div>
-    <div class="portal-user-info">
-      <div class="portal-avatar" id="portal-avatar">C</div>
-      <div>
-        <div style="color:var(--off-white);font-weight:500" id="portal-nome">Cliente</div>
-        <div style="font-size:11px;color:var(--gold)" id="portal-nivel-label">Nível Bronze</div>
+
+  <!-- ── Top Bar ─────────────────────────────────────────── -->
+  <header class="portal-topbar">
+    <div class="portal-brand">lumí<span>.</span></div>
+    <div class="portal-topbar-right">
+      <div class="portal-user-chip">
+        <div class="portal-avatar-sm" id="portal-avatar">C</div>
+        <div>
+          <div class="portal-user-name" id="portal-nome">Cliente</div>
+          <div class="portal-user-level" id="portal-nivel-label">Bronze</div>
+        </div>
       </div>
-      <button onclick="doClienteLogout()" style="margin-left:12px;color:rgba(249,246,241,0.4);background:none;border:none;cursor:pointer;padding:6px" title="Sair">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <button class="portal-logout-btn" onclick="doClienteLogout()" title="Sair">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </button>
     </div>
   </header>
 
-  <!-- Tabs -->
-  <nav class="portal-nav">
-    <div class="portal-tab active" onclick="switchPortalTab('fidelidade',this)" id="ptab-fidelidade">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      Fidelidade
-    </div>
-    <div class="portal-tab" onclick="switchPortalTab('rastreio',this)" id="ptab-rastreio">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      Rastrear Pedido
-    </div>
-    <div class="portal-tab" onclick="switchPortalTab('historico',this)" id="ptab-historico">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      Meus Pedidos
-    </div>
-    <div class="portal-tab" onclick="switchPortalTab('cupons',this)" id="ptab-cupons">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-      Meus Cupons
-    </div>
+  <!-- ── Body ───────────────────────────────────────────── -->
+  <div class="portal-body">
+
+    <!-- Sidebar -->
+    <aside class="portal-sidebar">
+      <div class="portal-sidebar-section">Menu</div>
+
+      <button class="portal-nav-item active" onclick="switchPortalTab('fidelidade',this)" id="ptab-fidelidade">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Fidelidade
+        <span class="portal-nav-badge" id="sidebar-pts-badge">0</span>
+      </button>
+      <button class="portal-nav-item" onclick="switchPortalTab('rastreio',this)" id="ptab-rastreio">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Rastrear Pedido
+      </button>
+      <button class="portal-nav-item" onclick="switchPortalTab('historico',this)" id="ptab-historico">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Meus Pedidos
+        <span class="portal-nav-badge" id="sidebar-pedidos-badge" style="display:none">0</span>
+      </button>
+      <button class="portal-nav-item" onclick="switchPortalTab('cupons',this)" id="ptab-cupons">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Meus Cupons
+      </button>
+
+      <div class="portal-sidebar-section" style="margin-top:auto">Loja</div>
+      <button class="portal-nav-item" onclick="showShop();navigate('personalizar')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Criar nova vela
+      </button>
+      <button class="portal-nav-item" onclick="showShop();navigate('catalogo')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Velas Prontas
+      </button>
+    </aside>
+
+    <!-- Main content -->
+    <main class="portal-main" id="portal-main">
+
+      <!-- ── ABA: FIDELIDADE ──────────────────────────── -->
+      <div id="ptab-content-fidelidade" class="portal-section">
+
+        <!-- Hero card de pontos -->
+        <div class="fid-hero-card">
+          <div style="position:relative;z-index:1">
+            <div class="fid-eyebrow" id="fid-nivel-nome">Bronze</div>
+            <div class="fid-greeting" id="fid-nome-cliente">Olá, Cliente!</div>
+            <div class="fid-sub">Acumule pontos a cada compra e suba de nível</div>
+            <div class="fid-progress-wrap">
+              <div class="fid-progress-labels">
+                <span id="fid-pts-atual-label">0 pts</span>
+                <span id="fid-pts-proximo-label">Próximo: 500 pts</span>
+              </div>
+              <div class="fid-progress-track">
+                <div class="fid-progress-fill" id="fid-progress" style="width:0%"></div>
+              </div>
+              <div style="font-size:11px;color:rgba(249,246,241,0.3);margin-top:8px" id="fid-faltam"></div>
+            </div>
+          </div>
+          <div class="fid-pts-bubble">
+            <div class="fid-pts-num" id="fid-pontos">0</div>
+            <div class="fid-pts-label">pontos</div>
+          </div>
+        </div>
+
+        <!-- Níveis -->
+        <div class="portal-section-title">Clube de Níveis</div>
+        <div class="niveis-grid" id="niveis-grid"></div>
+
+        <!-- Benefícios -->
+        <div class="portal-section-title">Seus benefícios</div>
+        <div class="beneficios-grid" id="beneficios-grid"></div>
+
+        <!-- Como ganhar -->
+        <div class="pontos-card">
+          <div class="pontos-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Como ganhar pontos
+          </div>
+          <div class="pontos-row" style="animation-delay:0.05s">
+            <div class="pontos-row-left"><div class="pontos-row-icon">🕯</div>Cada R$ 1 gasto em pedidos</div>
+            <div class="pontos-row-pts">+1 pt</div>
+          </div>
+          <div class="pontos-row" style="animation-delay:0.1s">
+            <div class="pontos-row-left"><div class="pontos-row-icon">📦</div>Pedido com 3+ unidades</div>
+            <div class="pontos-row-pts">+20 pts</div>
+          </div>
+          <div class="pontos-row" style="animation-delay:0.15s">
+            <div class="pontos-row-left"><div class="pontos-row-icon">🎂</div>Compra no mês do aniversário</div>
+            <div class="pontos-row-pts">+50 pts</div>
+          </div>
+          <div class="pontos-row" style="animation-delay:0.2s">
+            <div class="pontos-row-left"><div class="pontos-row-icon">📲</div>Indicar um amigo que compra</div>
+            <div class="pontos-row-pts">+100 pts</div>
+          </div>
+        </div>
+
+        <!-- Extrato -->
+        <div class="extrato-card">
+          <div class="extrato-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Extrato de pontos
+          </div>
+          <div id="extrato-pontos"><div class="extrato-empty">Nenhuma movimentação ainda</div></div>
+        </div>
+      </div>
+
+      <!-- ── ABA: RASTREIO ────────────────────────────── -->
+      <div id="ptab-content-rastreio" class="portal-section hidden">
+        <div class="rastreio-card">
+          <div class="rastreio-title">Rastrear Pedido</div>
+          <div class="rastreio-sub">Digite o número do pedido (ex: LMI-0001) ou seu e-mail</div>
+          <div class="rastreio-row">
+            <input id="rastreio-input" class="rastreio-input-new" placeholder="LMI-0001 ou seu@email.com" onkeydown="if(event.key==='Enter')buscarPedido()">
+            <button class="btn btn-primary" onclick="buscarPedido()">Rastrear</button>
+          </div>
+        </div>
+        <div id="rastreio-result" class="hidden"></div>
+      </div>
+
+      <!-- ── ABA: HISTÓRICO ───────────────────────────── -->
+      <div id="ptab-content-historico" class="portal-section hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <div class="portal-section-title" style="margin-bottom:0">Meus Pedidos</div>
+          <button class="btn btn-outline btn-sm" onclick="switchPortalTab('rastreio',document.getElementById('ptab-rastreio'))">Rastrear pedido</button>
+        </div>
+        <div id="historico-list" style="display:flex;flex-direction:column;gap:12px"><div class="spinner" style="margin:40px auto"></div></div>
+      </div>
+
+      <!-- ── ABA: CUPONS ──────────────────────────────── -->
+      <div id="ptab-content-cupons" class="portal-section hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <div class="portal-section-title" style="margin-bottom:0">Meus Cupons</div>
+          <span style="font-size:12px;color:var(--gray)">Clique no código para copiar</span>
+        </div>
+        <div id="cupons-list"><div class="spinner" style="margin:40px auto"></div></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Mobile nav (bottom bar on small screens) -->
+  <nav class="portal-mobile-nav">
+    <button class="mobile-nav-item active" onclick="switchPortalTab('fidelidade',this)" id="mnav-fidelidade">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Pontos
+    </button>
+    <button class="mobile-nav-item" onclick="switchPortalTab('rastreio',this)" id="mnav-rastreio">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Rastrear
+    </button>
+    <button class="mobile-nav-item" onclick="switchPortalTab('historico',this)" id="mnav-historico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      Pedidos
+    </button>
+    <button class="mobile-nav-item" onclick="switchPortalTab('cupons',this)" id="mnav-cupons">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      Cupons
+    </button>
   </nav>
 
-  <!-- Content -->
-  <div class="portal-content">
-
-    <!-- ABA: FIDELIDADE -->
-    <div id="ptab-content-fidelidade">
-      <!-- Hero pontos -->
-      <div class="fidelidade-hero">
-        <div>
-          <div class="fidelidade-nivel" id="fid-nivel-nome">Nível Bronze</div>
-          <h2 id="fid-nome-cliente">Olá, Cliente!</h2>
-          <p>Você está acumulando pontos a cada compra. Quanto mais compra, mais benefícios!</p>
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-labels">
-              <span id="fid-pts-atual-label">0 pts</span>
-              <span id="fid-pts-proximo-label">Próximo nível: 500 pts</span>
-            </div>
-            <div class="progress-bar-track">
-              <div class="progress-bar-fill" id="fid-progress" style="width:0%"></div>
-            </div>
-            <div style="font-size:12px;color:rgba(249,246,241,0.4);margin-top:4px" id="fid-faltam"></div>
-          </div>
-        </div>
-        <div class="pontos-big">
-          <div class="pontos-num" id="fid-pontos">0</div>
-          <div class="pontos-label">pontos</div>
-        </div>
-      </div>
-
-      <!-- Níveis -->
-      <h3 style="font-family:var(--font-display);font-size:20px;margin-bottom:16px">Níveis do Clube</h3>
-      <div class="niveis-grid" id="niveis-grid"></div>
-
-      <!-- Benefícios do nível atual -->
-      <h3 style="font-family:var(--font-display);font-size:20px;margin-bottom:16px">Seus benefícios</h3>
-      <div class="beneficios-grid" id="beneficios-grid"></div>
-
-      <!-- Como ganhar pontos -->
-      <div style="background:white;border-radius:8px;padding:24px;margin-bottom:24px">
-        <h3 style="font-family:var(--font-display);font-size:18px;margin-bottom:16px">Como ganhar pontos</h3>
-        <div style="display:flex;flex-direction:column;gap:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--light-gray)">
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px">
-              <span style="font-size:20px">🕯</span> Cada R$ 1 gasto em pedidos
-            </div>
-            <span style="font-family:var(--font-display);font-size:18px;color:var(--gold)">+1 ponto</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--light-gray)">
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px">
-              <span style="font-size:20px">🎂</span> Compra no mês do aniversário
-            </div>
-            <span style="font-family:var(--font-display);font-size:18px;color:var(--gold)">+50 pts bônus</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--light-gray)">
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px">
-              <span style="font-size:20px">📦</span> Pedido com 3+ unidades
-            </div>
-            <span style="font-family:var(--font-display);font-size:18px;color:var(--gold)">+20 pts bônus</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px">
-              <span style="font-size:20px">📲</span> Indicar um amigo que compra
-            </div>
-            <span style="font-family:var(--font-display);font-size:18px;color:var(--gold)">+100 pts</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Histórico de pontos -->
-      <div class="historico-pontos">
-        <div class="table-header" style="padding:18px 20px;border-bottom:1px solid var(--light-gray)">
-          <span style="font-family:var(--font-display);font-size:18px">Extrato de pontos</span>
-        </div>
-        <div id="extrato-pontos" style="padding:16px 20px"></div>
-      </div>
-    </div>
-
-    <!-- ABA: RASTREIO -->
-    <div id="ptab-content-rastreio" class="hidden">
-      <div class="rastreio-search">
-        <h3>Rastrear Pedido</h3>
-        <p style="font-size:14px;color:var(--gray);margin-bottom:16px">Digite o número do pedido ou seu e-mail para ver o status</p>
-        <div class="rastreio-input-row">
-          <input id="rastreio-input" placeholder="Ex: LMI-0001 ou seu@email.com" onkeydown="if(event.key==='Enter')buscarPedido()">
-          <button class="btn btn-primary" onclick="buscarPedido()">Rastrear</button>
-        </div>
-      </div>
-      <div id="rastreio-result" class="hidden"></div>
-    </div>
-
-    <!-- ABA: HISTÓRICO -->
-    <div id="ptab-content-historico" class="hidden">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <h2 style="font-family:var(--font-display);font-size:24px">Meus Pedidos</h2>
-        <button class="btn btn-outline btn-sm" onclick="switchPortalTab('rastreio',document.getElementById('ptab-rastreio'))">
-          + Rastrear pedido
-        </button>
-      </div>
-      <div id="historico-list"><div class="spinner"></div></div>
-    </div>
-
-    <!-- ABA: CUPONS -->
-    <div id="ptab-content-cupons" class="hidden">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <h2 style="font-family:var(--font-display);font-size:24px">Meus Cupons</h2>
-        <div style="font-size:13px;color:var(--gray)">Clique no código para copiar</div>
-      </div>
-      <div id="cupons-list"><div class="spinner"></div></div>
-    </div>
-
-  </div><!-- portal-content -->
 </div><!-- #portal-app -->
 
 <!-- ═══════════════════════════════════════════════════════
@@ -1365,6 +1996,10 @@ tr:hover td{background:rgba(201,169,110,0.03)}
       <a class="nav-item" onclick="showAdminSection('velasprontas')" id="nav-velasprontas">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg>
         Velas Prontas
+      </a>
+      <a class="nav-item" onclick="showAdminSection('configuracao')" id="nav-configuracao">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Configurações
       </a>
       <div class="nav-section" id="nav-section-financeiro" style="display:none">Financeiro</div>
       <a class="nav-item" onclick="showAdminSection('financeiro')" id="nav-financeiro" style="display:none">
@@ -1598,51 +2233,105 @@ function renderMasterNav() {
 }
 
 // ─── PERSONALIZER ───────────────────────────────────────────
-function initPersonalizer() {
-  // Colors
+// ─── CONFIG DO PERSONALIZADOR (carregada do Sheets) ──────────────────────
+// Fallback local caso a API não responda
+let _persConfig = null;
+
+async function initPersonalizer() {
+  // Mostra loading enquanto busca config do Sheets
   const sw = document.getElementById('color-swatches');
-  sw.innerHTML = CORES.map(c => `
-    <div class="swatch" style="background:${c.hex}" onclick="selectCor('${c.name}','${c.hex}')" id="sw-${c.name}">
-      <div class="swatch-tooltip">${c.name}</div>
-    </div>
-  `).join('');
+  sw.innerHTML = '<div class="pers-config-loading"><div class="spinner" style="width:16px;height:16px;border-width:2px"></div> Carregando opções...</div>';
 
-  // Aromas
-  document.getElementById('aroma-options').innerHTML = AROMAS.map(a => `
-    <div class="option-card" onclick="selectOption('aroma','${a.name}',${a.price})" id="opt-aroma-${a.name}">
-      <div class="opt-name">${a.name}</div>
-      <div class="opt-price">${a.price > 0 ? '+R$ '+a.price+',00' : 'Incluso'}</div>
-    </div>
-  `).join('');
+  try {
+    const res = await apiCall('getConfiguracaoLoja', {});
+    if (res.config && Object.keys(res.config).length > 0) {
+      _persConfig = res.config;
+      // Verifica se há algum item indisponível para mostrar aviso
+      const temIndisponivel = Object.values(res.config).some(lista =>
+        lista.some(item => !item.disponivel)
+      );
+      const aviso = document.getElementById('pers-config-aviso');
+      if (aviso) aviso.style.display = temIndisponivel ? 'block' : 'none';
+    }
+  } catch(e) {
+    console.warn('Config do Sheets indisponível, usando fallback local:', e);
+    _persConfig = null;
+  }
 
-  // Formatos
-  document.getElementById('formato-options').innerHTML = FORMATOS.map(f => `
-    <div class="option-card" onclick="selectOption('formato','${f.name}',${f.price})" id="opt-formato-${f.name}">
-      <div class="opt-name">${f.name}</div>
-      <div class="opt-price">${f.price > 0 ? '+R$ '+f.price+',00' : 'Incluso'}</div>
-    </div>
-  `).join('');
+  // Resolve configuração: Sheets ou fallback hardcoded
+  const cores      = _persConfig?.cor      || CORES.map(c => ({ nome: c.name, hex: c.hex, preco_extra: 0, disponivel: true }));
+  const aromas     = _persConfig?.aroma    || AROMAS.map(a => ({ nome: a.name, preco_extra: a.price, disponivel: true }));
+  const formatos   = _persConfig?.formato  || FORMATOS.map(f => ({ nome: f.name, preco_extra: f.price, disponivel: true }));
+  const embalagens = _persConfig?.embalagem|| EMBALAGENS.map(e => ({ nome: e.name, preco_extra: e.price, disponivel: true }));
+  const fitas      = _persConfig?.fita     || FITAS.map(f => ({ nome: f.name, preco_extra: f.price, disponivel: true }));
 
-  // Embalagens
-  document.getElementById('embalagem-options').innerHTML = EMBALAGENS.map(e => `
-    <div class="option-card" onclick="selectOption('embalagem','${e.name}',${e.price})" id="opt-embalagem-${e.name}">
-      <div class="opt-name">${e.name}</div>
-      <div class="opt-price">${e.price > 0 ? '+R$ '+e.price+',00' : 'Incluso'}</div>
-    </div>
-  `).join('');
+  // ── Cores ──────────────────────────────────────────────────
+  sw.innerHTML = cores.map(c => {
+    const esgotado = !c.disponivel;
+    return `<div class="swatch${esgotado ? ' indisponivel' : ''}"
+      style="background:${c.hex}"
+      ${esgotado ? '' : `onclick="selectCor('${c.nome}','${c.hex}')"`}
+      id="sw-${c.nome}"
+      title="${esgotado ? (c.motivo || 'Indisponível') : c.nome}">
+      <div class="swatch-tooltip">${c.nome}${esgotado ? ' — Esgotado' : ''}</div>
+    </div>`;
+  }).join('');
 
-  // Fitas
-  document.getElementById('fita-options').innerHTML = FITAS.map(f => `
-    <div class="option-card" onclick="selectOption('fita','${f.name}',${f.price})" id="opt-fita-${f.name}">
-      <div class="opt-name">${f.name}</div>
-      <div class="opt-price">${f.price > 0 ? '+R$ '+f.price+',00' : 'Sem custo'}</div>
-    </div>
-  `).join('');
+  // ── Aromas ─────────────────────────────────────────────────
+  document.getElementById('aroma-options').innerHTML = aromas.map(a => {
+    const esgotado = !a.disponivel;
+    return `<div class="option-card${esgotado ? ' indisponivel' : ''}"
+      ${esgotado ? '' : `onclick="selectOption('aroma','${a.nome}',${a.preco_extra})"`}
+      id="opt-aroma-${a.nome}"
+      title="${esgotado ? (a.motivo || 'Indisponível') : ''}">
+      <div class="opt-name">${a.nome}</div>
+      <div class="opt-price">${esgotado ? '—' : a.preco_extra > 0 ? '+R$ '+a.preco_extra+',00' : 'Incluso'}</div>
+    </div>`;
+  }).join('');
 
-  // Defaults
-  selectCor('Branco', '#FAF7F2');
-  selectOption('aroma', 'Alecrim', 0);
-  selectOption('formato', 'Cilíndrico', 0);
+  // ── Formatos ───────────────────────────────────────────────
+  document.getElementById('formato-options').innerHTML = formatos.map(f => {
+    const esgotado = !f.disponivel;
+    return `<div class="option-card${esgotado ? ' indisponivel' : ''}"
+      ${esgotado ? '' : `onclick="selectOption('formato','${f.nome}',${f.preco_extra})"`}
+      id="opt-formato-${f.nome}"
+      title="${esgotado ? (f.motivo || 'Indisponível') : ''}">
+      <div class="opt-name">${f.nome}</div>
+      <div class="opt-price">${esgotado ? '—' : f.preco_extra > 0 ? '+R$ '+f.preco_extra+',00' : 'Incluso'}</div>
+    </div>`;
+  }).join('');
+
+  // ── Embalagens ─────────────────────────────────────────────
+  document.getElementById('embalagem-options').innerHTML = embalagens.map(e => {
+    const esgotado = !e.disponivel;
+    return `<div class="option-card${esgotado ? ' indisponivel' : ''}"
+      ${esgotado ? '' : `onclick="selectOption('embalagem','${e.nome}',${e.preco_extra})"`}
+      id="opt-embalagem-${e.nome}"
+      title="${esgotado ? (e.motivo || 'Indisponível') : ''}">
+      <div class="opt-name">${e.nome}</div>
+      <div class="opt-price">${esgotado ? '—' : e.preco_extra > 0 ? '+R$ '+e.preco_extra+',00' : 'Incluso'}</div>
+    </div>`;
+  }).join('');
+
+  // ── Fitas ──────────────────────────────────────────────────
+  document.getElementById('fita-options').innerHTML = fitas.map(f => {
+    const esgotado = !f.disponivel;
+    return `<div class="option-card${esgotado ? ' indisponivel' : ''}"
+      ${esgotado ? '' : `onclick="selectOption('fita','${f.nome}',${f.preco_extra})"`}
+      id="opt-fita-${f.nome}"
+      title="${esgotado ? (f.motivo || 'Indisponível') : ''}">
+      <div class="opt-name">${f.nome}</div>
+      <div class="opt-price">${esgotado ? '—' : f.preco_extra > 0 ? '+R$ '+f.preco_extra+',00' : 'Sem custo'}</div>
+    </div>`;
+  }).join('');
+
+  // ── Defaults (primeira opção disponível de cada categoria) ──
+  const primeiraCorDisp = cores.find(c => c.disponivel);
+  if (primeiraCorDisp) selectCor(primeiraCorDisp.nome, primeiraCorDisp.hex);
+  const primeiroAromaDisp = aromas.find(a => a.disponivel);
+  if (primeiroAromaDisp) selectOption('aroma', primeiroAromaDisp.nome, primeiroAromaDisp.preco_extra);
+  const primeiroFormatoDisp = formatos.find(f => f.disponivel);
+  if (primeiroFormatoDisp) selectOption('formato', primeiroFormatoDisp.nome, primeiroFormatoDisp.preco_extra);
   selectOption('embalagem', 'Simples', 0);
   selectOption('fita', 'Sem fita', 0);
 }
@@ -2129,7 +2818,7 @@ function showAdminSection(section) {
   });
   const titles = {
     dashboard: 'Dashboard', pedidos: 'Pedidos', clientes: 'Clientes',
-    estoque: 'Estoque de Insumos', velasprontas: 'Velas Prontas — Promoções',
+    estoque: 'Estoque de Insumos', velasprontas: 'Velas Prontas — Promoções', configuracao: 'Configurações do Personalizador',
     financeiro: 'Financeiro', relatorios: 'Relatórios', usuarios: 'Usuários'
   };
   document.getElementById('admin-page-title').textContent = titles[section] || section;
@@ -2143,6 +2832,7 @@ function showAdminSection(section) {
   else if (section === 'clientes') renderAdminClientes();
   else if (section === 'estoque') renderAdminEstoque();
   else if (section === 'velasprontas') renderAdminVelasProntas();
+  else if (section === 'configuracao') renderAdminConfiguracao();
   else if (section === 'financeiro') renderAdminFinanceiro();
   else if (section === 'relatorios') renderAdminRelatorios();
   else if (section === 'usuarios') renderAdminUsuarios();
@@ -3204,14 +3894,22 @@ function _renderPortalHeader() {
   const pontos = clienteAtual.pontos || 0;
   const nivel = getNivel(pontos);
 
-  const elNome = document.getElementById('portal-nome');
-  const elAvatar = document.getElementById('portal-avatar');
-  const elNivel = document.getElementById('portal-nivel-label');
-  if (elNome) elNome.textContent = primeiro;
-  if (elAvatar) elAvatar.textContent = primeiro[0].toUpperCase();
-  if (elNivel) elNivel.textContent = nivel.emoji + ' ' + nivel.nome;
+  document.getElementById('portal-nome')?.textContent != null && (document.getElementById('portal-nome').textContent = primeiro);
+  document.getElementById('portal-avatar')?.textContent != null && (document.getElementById('portal-avatar').textContent = primeiro[0].toUpperCase());
+  document.getElementById('portal-nivel-label')?.textContent != null && (document.getElementById('portal-nivel-label').textContent = nivel.nome);
 
-  // Atualiza botão no header da loja
+  // Sidebar badge com pontos
+  const badge = document.getElementById('sidebar-pts-badge');
+  if (badge) badge.textContent = pontos.toLocaleString('pt-BR') + ' pts';
+
+  // Pedidos badge
+  const pedBadge = document.getElementById('sidebar-pedidos-badge');
+  if (pedBadge) {
+    pedBadge.textContent = clientePedidos.length;
+    pedBadge.style.display = clientePedidos.length ? '' : 'none';
+  }
+
+  // Atualiza botão header da loja
   const btnHeader = document.getElementById('btn-minha-conta');
   if (btnHeader) {
     btnHeader.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg> ${primeiro}`;
@@ -3220,12 +3918,15 @@ function _renderPortalHeader() {
 
 // ─── TABS ────────────────────────────────────────────────
 function switchPortalTab(tab) {
-  document.querySelectorAll('.portal-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('[id^="ptab-content-"]').forEach(c => c.classList.add('hidden'));
-  const tabEl = document.getElementById('ptab-' + tab);
-  const contentEl = document.getElementById('ptab-content-' + tab);
-  if (tabEl) tabEl.classList.add('active');
-  if (contentEl) contentEl.classList.remove('hidden');
+  ['fidelidade','rastreio','historico','cupons'].forEach(t => {
+    document.getElementById('ptab-content-'+t)?.classList.toggle('hidden', t !== tab);
+    document.getElementById('ptab-'+t)?.classList.toggle('active', t === tab);
+    document.getElementById('mnav-'+t)?.classList.toggle('active', t === tab);
+  });
+  if (tab === 'historico') renderHistorico();
+  if (tab === 'cupons')    renderCupons();
+  // Smooth scroll to top on mobile
+  document.getElementById('portal-main')?.scrollTo({top:0, behavior:'smooth'});
 }
 
 // ─── FIDELIDADE ──────────────────────────────────────────
@@ -3264,13 +3965,20 @@ function renderFidelidade() {
 
   // Níveis grid
   const niveisEl = document.getElementById('niveis-grid');
-  if (niveisEl) niveisEl.innerHTML = NIVEIS.map(n => `
-    <div class="nivel-card ${n.nome === nivel.nome ? 'atual' : ''}">
-      <div class="nivel-icon">${n.emoji}</div>
-      <div class="nivel-name">${n.nome}</div>
-      <div class="nivel-pts">${n.min === 0 ? '0' : n.min.toLocaleString('pt-BR')}+ pts</div>
-      <div class="nivel-beneficios">${n.desconto}% desconto</div>
-    </div>`).join('');
+  const nivelColors = {'Bronze':'#CD7F32','Prata':'#A0A0B0','Ouro':'#C9A96E','Diamante':'#B9F2FF'};
+  if (niveisEl) niveisEl.innerHTML = NIVEIS.map(n => {
+    const isCurrent = n.nome === nivel.nome;
+    const isLocked  = n.min > pontos;
+    const cor       = nivelColors[n.nome] || '#C9A96E';
+    return `<div class="nivel-card${isCurrent?' atual':''}${isLocked?' bloqueado':''}">
+      <div class="nivel-icon-wrap" style="background:${cor}18">
+        <span style="font-size:22px">${n.emoji}</span>
+      </div>
+      <div class="nivel-name" style="color:${isCurrent?'var(--black)':'var(--gray)'}">${n.nome}</div>
+      <div class="nivel-pts-req">${n.min === 0 ? 'Inicial' : n.min.toLocaleString('pt-BR')+'+ pts'}</div>
+      <div class="nivel-desc">${n.desconto}% off · ${n.frete?'Frete grátis':'Frete padrão'}</div>
+    </div>`;
+  }).join('');
 
   // Benefícios
   const bensEl = document.getElementById('beneficios-grid');
@@ -3283,8 +3991,9 @@ function renderFidelidade() {
     ];
     bensEl.innerHTML = bens.map(b => `
       <div class="beneficio-card">
-        <div class="beneficio-icon"><span style="font-size:20px">${b.icon}</span></div>
-        <div><div class="beneficio-title">${b.title}</div><div class="beneficio-desc">${b.desc}</div></div>
+        <div class="beneficio-icon-wrap"><span style="font-size:18px">${b.icon}</span></div>
+        <div class="beneficio-title">${b.title}</div>
+        <div class="beneficio-desc">${b.desc}</div>
       </div>`).join('');
   }
 
@@ -3295,19 +4004,18 @@ function renderFidelidade() {
     extratoEl.innerHTML = '<p style="text-align:center;color:var(--gray);padding:28px 20px">Nenhuma compra ainda. Seu extrato aparece aqui após o primeiro pedido!</p>';
     return;
   }
-  extratoEl.innerHTML = clientePedidos.map(p => {
+  extratoEl.innerHTML = clientePedidos.map((p, idx) => {
     const val = parseFloat(p['valor total'] || 0);
     const pts = Math.floor(val) + (parseInt(p.quantidade||1) >= 3 ? 20 : 0);
-    return `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--light-gray);font-size:14px">
-      <div>
-        <div style="font-weight:500">${p['nº pedido'] || '—'}</div>
-        <div style="font-size:12px;color:var(--gray);margin-top:2px">${p.data || '—'} · ${p.cor||'—'} ${p.aroma||''}</div>
+    return `<div class="extrato-item" style="animation-delay:${idx*0.05}s">
+      <div class="extrato-item-left">
+        <div class="extrato-item-dot" style="background:var(--gold)"></div>
+        <div>
+          <div class="extrato-item-desc">${p['nº pedido'] || '—'} · ${p.cor||'—'} ${p.aroma||''}</div>
+          <div class="extrato-item-date">${p.data || '—'}</div>
+        </div>
       </div>
-      <div style="text-align:right">
-        <div style="font-family:var(--font-display);font-size:18px;color:var(--green)">+${pts} pts</div>
-        <div style="font-size:11px;color:var(--gray)">R$ ${val.toFixed(2).replace('.',',')}</div>
-      </div>
+      <div class="extrato-item-pts" style="color:var(--green)">+${pts} pts</div>
     </div>`; }).join('');
 }
 
@@ -3327,16 +4035,17 @@ function renderHistorico() {
     return;
   }
 
-  el.innerHTML = `<div class="pedidos-list">${clientePedidos.map(p => {
+  const statusColors = {'Pendente':'#F59E0B','Confirmado':'#3B82F6','Em produção':'#8B5CF6','Enviado':'#10B981','Entregue':'#22C55E'};
+  el.innerHTML = clientePedidos.map((p, idx) => {
     const cor = p.cor || 'Branco';
     const hex = CORES.find(c => c.name === cor)?.hex || '#C9A96E';
     const lhex = lightenHex(hex, 40);
     const status = p.status || 'Pendente';
+    const statusColor = statusColors[status] || '#9CA3AF';
     const val = parseFloat(p['valor total'] || 0);
-    return `
-    <div class="pedido-card" onclick="rastrearDireto('${p['nº pedido']}')">
-      <div class="pedido-card-left">
-        <div class="pedido-card-candle" style="background:${hex}22;border-radius:8px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+    return `<div class="historico-card-new" onclick="rastrearDireto('${p['nº pedido']}')" style="animation-delay:${idx*0.06}s">
+      <div style="display:flex;align-items:center;gap:14px;min-width:0">
+        <div class="hist-candle-thumb" style="background:${hex}18">
           <svg width="24" height="36" viewBox="0 0 24 36" xmlns="http://www.w3.org/2000/svg">
             <rect x="2" y="8" width="20" height="26" rx="4" fill="${hex}"/>
             <rect x="2" y="8" width="20" height="8" rx="4" fill="${lhex}"/>
@@ -3344,20 +4053,24 @@ function renderHistorico() {
             <ellipse cx="12" cy="3" rx="3" ry="4" fill="#FFD700" opacity="0.9"/>
           </svg>
         </div>
-        <div class="pedido-card-info">
-          <h4 style="font-weight:500;font-size:15px;margin-bottom:4px">${p['nº pedido'] || '—'}</h4>
-          <p style="font-size:13px;color:var(--gray)">${cor} · ${p.aroma || '—'} · ${p.data || '—'}</p>
-          <span class="badge badge-${getBadgeClass(status)}" style="margin-top:6px;display:inline-block">${status}</span>
+        <div class="hist-info" style="min-width:0">
+          <h4>${p['nº pedido'] || '—'}</h4>
+          <p>${cor} · ${p.aroma || '—'} · ${p.data || '—'}</p>
+          <span class="hist-status" style="background:${statusColor}18;color:${statusColor}">
+            <span style="width:6px;height:6px;border-radius:50%;background:${statusColor};flex-shrink:0"></span>
+            ${status}
+          </span>
         </div>
       </div>
-      <div style="text-align:right;flex-shrink:0">
-        <div style="font-family:var(--font-display);font-size:20px;margin-bottom:6px">R$ ${val.toFixed(2).replace('.',',')}</div>
-        <div style="font-size:12px;color:var(--gold);display:flex;align-items:center;gap:4px;justify-content:flex-end;cursor:pointer">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <div class="hist-right">
+        <div class="hist-valor">R$ ${val.toFixed(2).replace('.',',')}</div>
+        <div style="font-size:11px;color:var(--gold);margin-top:6px;display:flex;align-items:center;gap:4px;justify-content:flex-end">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           Rastrear
         </div>
       </div>
-    </div>`; }).join('')}</div>`;
+    </div>`;
+  }).join('');
 }
 
 // ─── RASTREIO ─────────────────────────────────────────────
@@ -3426,42 +4139,55 @@ function renderRastreio(p, container) {
   const status = p.status || 'Pendente';
   const statusIdx = STATUS_TIMELINE.findIndex(s => s.key === status);
   const activeIdx = statusIdx === -1 ? 0 : statusIdx;
+  const statusColors = {'Pendente':'#F59E0B','Confirmado':'#3B82F6','Em produção':'#8B5CF6','Enviado':'#10B981','Entregue':'#22C55E'};
+  const sColor = statusColors[status] || '#9CA3AF';
 
   const timelineHTML = STATUS_TIMELINE.map((s, i) => {
-    const done = i < activeIdx;
+    const done   = i < activeIdx;
     const active = i === activeIdx;
-    return `
-    <div class="timeline-item">
-      <div class="timeline-dot ${done ? 'done' : active ? 'active' : ''}">
-        ${done ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:10px;height:10px"><polyline points="20 6 9 17 4 12"/></svg>` : `<span style="font-size:8px">${i+1}</span>`}
+    const isLast = i === STATUS_TIMELINE.length - 1;
+    return `<div class="timeline-new-item" style="animation-delay:${i*0.08}s">
+      <div class="tl-left">
+        <div class="tl-dot ${done?'done':active?'active':''}">
+          ${done
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>'
+            : active
+              ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><circle cx="12" cy="12" r="4" fill="var(--gold)"/></svg>'
+              : `<span style="font-size:9px;color:rgba(0,0,0,0.3);font-weight:500">${i+1}</span>`}
+        </div>
+        ${!isLast ? `<div class="tl-line ${done?'done':''}"></div>` : ''}
       </div>
-      <div class="timeline-content ${done?'done':active?'active':''}">
-        <h4 style="font-weight:${active?'600':'400'};color:${active?'var(--gold)':done?'var(--black)':'var(--gray)'};font-size:14px">${s.icon} ${s.label}</h4>
-        ${done||active ? `<p style="font-size:13px;color:var(--gray);margin-top:2px">${s.desc}</p>` : ''}
-        ${done||active ? `<div style="font-size:11px;color:var(--gray);margin-top:4px;text-transform:uppercase;letter-spacing:0.05em">${done ? (p.data||'') : '● Agora'}</div>` : ''}
+      <div class="tl-right">
+        <div class="tl-title ${done?'done':active?'active':''}">${s.icon} ${s.label}</div>
+        ${done||active ? `<div class="tl-desc">${s.desc}</div>` : ''}
+        ${done||active ? `<div class="tl-time ${done?'done':''}">${done ? (p.data||'Concluído') : '● Em andamento agora'}</div>` : ''}
       </div>
     </div>`;
   }).join('');
 
   el.innerHTML = `
-    <div class="rastreio-result">
-      <div class="rastreio-header">
+    <div class="rastreio-result-card">
+      <div class="rastreio-result-header">
         <div>
-          <div class="rastreio-num">${p['nº pedido']||'—'}</div>
-          <div style="font-size:13px;color:var(--gray);margin-top:4px">${p['nome cliente']||''} · ${p.data||''}</div>
+          <div class="rastreio-num-new">${p['nº pedido']||'—'}</div>
+          <div class="rastreio-meta">${p['nome cliente']||''} · ${p.data||''}</div>
         </div>
-        <span class="badge badge-${getBadgeClass(status)}" style="font-size:13px;padding:7px 16px">${status}</span>
+        <span class="hist-status" style="background:${sColor}18;color:${sColor}">
+          <span style="width:6px;height:6px;border-radius:50%;background:${sColor};flex-shrink:0"></span>
+          ${status}
+        </span>
       </div>
-      <div class="timeline">${timelineHTML}</div>
-      <div class="pedido-detalhes">
-        <div class="pedido-det-item"><div class="pedido-det-label">Cor</div><div class="pedido-det-val">${p.cor||'—'}</div></div>
-        <div class="pedido-det-item"><div class="pedido-det-label">Aroma</div><div class="pedido-det-val">${p.aroma||'—'}</div></div>
-        <div class="pedido-det-item"><div class="pedido-det-label">Formato</div><div class="pedido-det-val">${p.formato||'—'}</div></div>
-        <div class="pedido-det-item"><div class="pedido-det-label">Embalagem</div><div class="pedido-det-val">${p.embalagem||'—'}</div></div>
-        <div class="pedido-det-item"><div class="pedido-det-label">Quantidade</div><div class="pedido-det-val">${p.quantidade||1}</div></div>
-        <div class="pedido-det-item"><div class="pedido-det-label">Total</div><div class="pedido-det-val" style="color:var(--gold);font-family:var(--font-display);font-size:18px">R$ ${parseFloat(p['valor total']||0).toFixed(2).replace('.',',')}</div></div>
-        <div class="pedido-det-item" style="grid-column:1/-1"><div class="pedido-det-label">Endereço</div><div class="pedido-det-val">${p['endereço completo']||p.endereco||'—'}</div></div>
+      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(0,0,0,0.3);margin-bottom:18px">Linha do tempo</div>
+      <div class="timeline-new">${timelineHTML}</div>
+      <div style="margin-top:24px;padding:20px;background:var(--off-white);border-radius:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+        <div><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);margin-bottom:4px">Cor</div><div style="font-weight:500;font-size:13px">${p.cor||'—'}</div></div>
+        <div><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);margin-bottom:4px">Aroma</div><div style="font-weight:500;font-size:13px">${p.aroma||'—'}</div></div>
+        <div><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);margin-bottom:4px">Qtd</div><div style="font-weight:500;font-size:13px">${p.quantidade||1}</div></div>
+        <div><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);margin-bottom:4px">Formato</div><div style="font-weight:500;font-size:13px">${p.formato||'—'}</div></div>
+        <div><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);margin-bottom:4px">Embalagem</div><div style="font-weight:500;font-size:13px">${p.embalagem||'—'}</div></div>
+        <div><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);margin-bottom:4px">Total</div><div style="font-weight:600;font-size:14px;color:var(--gold)">R$ ${parseFloat(p['valor total']||0).toFixed(2).replace('.',',')}</div></div>
       </div>
+      <div style="margin-top:16px;font-size:13px;color:var(--gray)"><span style="opacity:0.5">Endereço:</span> ${p['endereço completo']||p.endereco||'—'}</div>
       <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn btn-primary btn-sm" onclick="openWhatsApp('${p['nº pedido']}')">
           💬 Falar com a gente
@@ -3561,22 +4287,20 @@ async function renderCupons() {
   }
 
   el.innerHTML = `
-    <div class="cupons-grid">${cupons.map(c => `
-    <div class="cupom-card">
-      ${c.novo ? '<div class="cupom-badge-novo">Novo!</div>' : ''}
-      <div class="cupom-header">
-        <div>
-          <div class="cupom-desconto">${c.desconto}</div>
-          <div class="cupom-tipo">${c.tipo}</div>
-        </div>
+    <div class="cupons-grid">${cupons.map((c,ci) => `
+    <div class="cupom-card-new" style="animation-delay:${ci*0.07}s">
+      ${c.novo ? '<div class="cupom-badge-new">Novo!</div>' : ''}
+      <div class="cupom-top">
+        <div class="cupom-discount">${c.desconto}</div>
+        <div class="cupom-type">${c.tipo}</div>
       </div>
-      <div class="cupom-body">
-        <div class="cupom-code" onclick="copiarCupom('${c.code}',this)" title="Clique para copiar">
+      <div class="cupom-bottom">
+        <div class="cupom-code-new" onclick="copiarCupom('${c.code}',this)" title="Clique para copiar">
           <span>${c.code}</span>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
         </div>
-        <div class="cupom-desc">${c.desc}</div>
-        <div class="cupom-validade">
+        <div class="cupom-desc-new">${c.desc}</div>
+        <div class="cupom-val-new">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           ${c.validade}
         </div>
@@ -3585,14 +4309,12 @@ async function renderCupons() {
     </div>
 
     <!-- ── Indicação de amigo ─────────────────────────── -->
-    <div style="background:white;border-radius:12px;padding:28px;margin-top:24px;border:1px solid var(--light-gray)">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
-        <div style="width:48px;height:48px;background:rgba(201,169,110,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📲</div>
-        <div>
-          <div style="font-weight:500;font-size:15px;margin-bottom:2px">Indicar um amigo</div>
-          <div style="font-size:13px;color:var(--gray)">Se seu amigo comprar, você ganha <strong style="color:var(--gold)">+100 pontos</strong> automaticamente</div>
-        </div>
+    <div class="indica-card">
+      <div class="indica-title">
+        <div style="width:36px;height:36px;background:rgba(201,169,110,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📲</div>
+        Indicar um amigo
       </div>
+      <div class="indica-sub">Se seu amigo fizer o primeiro pedido, você ganha automaticamente <strong style="color:var(--gold)">+100 pontos</strong>.</div>
       <div id="indicacao-resultado" style="display:none"></div>
       <div id="indicacao-form">
         <div class="field-row" style="margin-bottom:12px">
@@ -3849,6 +4571,90 @@ function addVelaProntaToCart(v) {
   updateCartUI();
   toast(`${v.cor} adicionada ao carrinho! 🕯`, 'success');
   openCart();
+}
+
+
+// ─── ADMIN: CONFIGURAÇÕES DO PERSONALIZADOR ─────────────────────────────────
+async function renderAdminConfiguracao() {
+  const el = document.getElementById('admin-content');
+  el.innerHTML = '<div class="pers-config-loading"><div class="spinner" style="width:18px;height:18px;border-width:2px;margin:0"></div>&nbsp;Carregando configurações...</div>';
+
+  const res = await apiCall('getConfiguracaoLoja', {});
+  const cfg = res.config || {};
+
+  const tipoLabel = { cor:'Cores', aroma:'Aromas', formato:'Formatos', embalagem:'Embalagens', fita:'Fitas' };
+  const tipos = ['cor','aroma','formato','embalagem','fita'];
+
+  const tabsHtml = tipos.map(t => `<button class="filter-chip${t==='cor'?' active':''}" onclick="switchCfgTab('${t}',this)">${tipoLabel[t]||t}</button>`).join('');
+
+  const sectionsHtml = tipos.map(t => {
+    const itens = cfg[t] || [];
+    const rows = itens.length ? itens.map(item => {
+      const dispBadge = item.disponivel
+        ? '<span class="badge badge-confirmed">Disponível</span>'
+        : `<span class="badge badge-cancelled">${item.motivo || 'Indisponível'}</span>`;
+      const hexEl = item.hex
+        ? `<div style="width:20px;height:20px;border-radius:50%;background:${item.hex};border:1px solid var(--light-gray);flex-shrink:0"></div>`
+        : '';
+      const estoqueEl = item.estoque !== null && item.estoque !== undefined
+        ? `<span style="font-size:12px;color:${item.estoque < 50 ? 'var(--red)' : 'var(--gray)'}">${item.estoque} un.</span>`
+        : '<span style="font-size:12px;color:var(--light-gray)">—</span>';
+      return `<tr>
+        <td><div style="display:flex;align-items:center;gap:8px">${hexEl}<span style="font-weight:500">${item.nome}</span></div></td>
+        <td>${dispBadge}</td>
+        <td>${estoqueEl}</td>
+        <td>${item.preco_extra > 0 ? '+R$ '+item.preco_extra+',00' : '<span style="color:var(--gray)">Incluso</span>'}</td>
+        ${currentUser?.role==='master' ? `<td>
+          <button class="action-btn" onclick="toggleCfgItem('${t}','${item.nome}',${item.ativo})" title="${item.ativo ? 'Desativar' : 'Ativar'}">
+            ${item.ativo
+              ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 12H3m8-8l-8 8 8 8"/></svg>'
+              : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'}
+          </button>
+        </td>` : '<td></td>'}
+      </tr>`;
+    }).join('') : `<tr><td colspan="5" class="empty-table">Nenhum item em "${tipoLabel[t]}"<br><small>Execute "iniciarSistema" para popular a aba Configuracao no Sheets</small></td></tr>`;
+
+    return `<div class="cfg-section" id="cfg-tab-${t}" style="display:${t==='cor'?'block':'none'}">
+      <table>
+        <thead><tr><th>Nome</th><th>Status</th><th>Estoque</th><th>Preço extra</th><th>Ação</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  }).join('');
+
+  const temIndisponivel = Object.values(cfg).some(lista => lista.some(i => !i.disponivel));
+
+  el.innerHTML = `
+    <div class="alert-box ${temIndisponivel ? 'orange' : 'green'}" style="margin-bottom:20px">
+      ${temIndisponivel
+        ? '⚠️ Há opções bloqueadas no personalizador por estoque insuficiente ou desativação manual.'
+        : '✅ Todas as opções estão disponíveis no personalizador.'}
+    </div>
+    <div style="background:white;border-radius:8px;padding:20px;margin-bottom:20px;border:1px solid var(--light-gray);font-size:13px;color:var(--gray);line-height:1.7">
+      <strong style="color:var(--black)">Como funciona:</strong> A disponibilidade é calculada automaticamente pelo estoque.
+      Se a quantidade de um insumo estiver abaixo do mínimo configurado na aba <code>Configuracao</code> do Sheets,
+      a opção fica bloqueada no personalizador. Você também pode desativar manualmente editando a coluna <code>ativo</code> (Não/Sim).
+      Após mudar no Sheets, o site atualiza automaticamente na próxima visita ao personalizador.
+    </div>
+    <div class="table-card">
+      <div class="table-header">
+        <span class="table-title">Opções do Personalizador</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">${tabsHtml}</div>
+      </div>
+      <div style="overflow-x:auto">${sectionsHtml}</div>
+    </div>`;
+}
+
+function switchCfgTab(tipo, btn) {
+  document.querySelectorAll('#admin-content .cfg-section').forEach(el => el.style.display = 'none');
+  const tab = document.getElementById('cfg-tab-' + tipo);
+  if (tab) tab.style.display = 'block';
+  document.querySelectorAll('#admin-content .filter-chip').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+async function toggleCfgItem(tipo, nome, ativoAtual) {
+  toast('Altere diretamente na aba Configuracao do Sheets → coluna "ativo" (Sim/Não) e recarregue.', 'info');
 }
 
 // ─── SCROLL REVEAL ─────────────────────────────────────────
